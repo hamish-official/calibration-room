@@ -51,7 +51,7 @@
           tfClient: tfClient,
           rootObject: viewer.scene,
           topic: '/scan1',
-          material: { size: 0.05, color: 0xff0000 },   // red
+          material: { size: 0.08, color: 0xff0000 },   // red
         });
 
         rear_scan = new ROS3D.LaserScan({
@@ -59,7 +59,7 @@
           tfClient: tfClient,
           rootObject: viewer.scene,
           topic: '/scan2',
-          material: { size: 0.1, color: 0x00ff00 },   // green
+          material: { size: 0.08, color: 0x00ff00 },   // green
         });
 
         depth_world_pointcloud = new ROS3D.PointCloud2({
@@ -67,7 +67,7 @@
           tfClient: tfClient,
           rootObject: viewer.scene,
           topic: '/depth_world_corners_messages',
-          material: { size: 0.1, color: 0xffffff },   // white
+          material: { size: 0.08, color: 0xffffff },   // white
         });
 
         depth_camera_pointcloud = new ROS3D.PointCloud2({
@@ -75,25 +75,24 @@
           tfClient: tfClient,
           rootObject: viewer.scene,
           topic: '/depth_camera_corners_messages',
-          material: { size: 0.1, color: 0x0000ff },   // blue
+          material: { size: 0.08, color: 0x0000ff },   // blue
         });
       }
       </script>
   </head>
-  
+
   <body onload="init()">
-    <div id="app">
+    <div id="app" style="padding: 0px;">
       <!-- <h1>Webviz for <a href='/'>Calibration Room</a></h1> -->
-      <div class="row mb-2">
-        <h2>WEBVIZ for <a href='/'>Calibration Room</a></h2>
+      <div style="margin-bottom: 10px;">
+        <h2 style="margin: 20px;">WEBVIZ for <a href='/'>Calibration Room</a></h2>
         <span style="color: grey;">
           <b>[ RED : FRONT LIDAR, GREEN : REAR LIDAR, BLUE : DEPTH CAMERA ]</b>
-          <br/><br/>
         </span>
       </div>
-      <div class="row">
+      <div>
         <div id="viewer"></div>
-        <span style="color: grey;"><br/>
+        <span style="color: grey;">
           <em>Required Packages : ros-noetic-tf2-ros, ros-noetic-tf2-web-republisher</em>
         </span>
       </div>

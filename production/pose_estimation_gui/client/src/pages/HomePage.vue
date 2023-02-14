@@ -4,11 +4,11 @@
 			<div class="margin-bottom-basic mb-4">
 				<h5>센서의 6-DOF 값을 URDF 로 생성합니다.</h5>
 				<span style="color:grey;">
-          프로그램에 대한 상세 코드는
-          <a target=”_blank” href="https://github.com/hamish-official/calibration-room.git">여기</a>에서 확인 가능합니다.<br/>
           작동 상태:
           <span v-if="connection" style="color: green">{{ connection_text }}</span>
           <span v-else style="color: red">{{ connection_text }}</span>
+          <br/>
+          연결된 아이피: {{ ip }}
         </span>
 			</div>
     </div>
@@ -27,6 +27,11 @@
     <a href="/webviz.html" class="btn btn-lg btn-warning m-2" style="width: 5em">
       WEBVIZ
     </a>
+    <br/>
+    <div class="mt-3">
+      프로그램에 대한 상세 코드는
+      <a target=”_blank” href="https://github.com/hamish-official/calibration-room.git">여기</a>에서 확인 가능합니다.<br/>
+    </div>
   </div>
 </template>
 
@@ -37,6 +42,20 @@ import ROSLIB from 'roslib';
 
 const connection = ref(false);
 const connection_text = ref('Disconnected');
+const ip = ref('');
+
+const getIp = async () => {
+  const data = await axios({
+    url: 'http://localhost:5000/get-ip',
+    data: {
+      // TODO : None
+    }
+  });
+
+  ip.value = data.data.ip;
+};
+
+getIp();
 
 // *** ros *** //
 const ros = new ROSLIB.Ros({
