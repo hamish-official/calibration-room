@@ -1,0 +1,114 @@
+<template>
+  <div class="all">
+    <div class="container">
+			<div class="margin-bottom-basic mb-4">
+				<h5>센서의 6-DOF 값을 URDF 로 생성합니다.</h5>
+				<span style="color:grey;">
+          프로그램에 대한 상세 코드는
+          <a target=”_blank” href="https://github.com/seongjun-working-directories/calibration-room.git">여기</a>에서 확인 가능합니다.<br/>
+          작동 상태: 
+          <span v-if="connection" style="color: green">{{ connection_text }}</span>
+          <span v-else style="color: red">{{ connection_text }}</span>
+        </span>
+			</div>
+    </div>
+    <button type="button" class="btn btn-lg btn-success m-2" style="width: 5em" @click="launch_on">
+      LAUNCH ON
+    </button>
+    <button type="button" class="btn btn-lg btn-danger m-2" style="width: 5em" @click="launch_off">
+      LAUNCH OFF
+    </button>
+
+    <br/>
+
+    <router-link to="/calibration" type="button" class="btn btn-lg btn-info m-2" style="width: 5em">
+      SHOW RESULT
+    </router-link>
+    <a href="/webviz.html" class="btn btn-lg btn-warning m-2" style="width: 5em">
+      WEBVIZ
+    </a>
+  </div>
+</template>
+
+<script setup>
+import axios from 'axios';
+import { ref } from 'vue';
+import ROSLIB from 'roslib';
+
+const connection = ref(false);
+const connection_text = ref('Disconnected');
+
+// *** ros *** //
+const ros = new ROSLIB.Ros({
+  url: 'ws://localhost:9090'
+});
+
+ros.on('connection', () => {
+  console.log('Connected to websocket server.');
+  connection.value = true;
+  connection_text.value = 'Connected';
+});
+
+ros.on('error', (error) => {
+  console.log('Error to connect websocket server: ', error);
+  connection.value = false;
+  connection_text.value = 'ERROR';
+});
+
+ros.on('close', () => {
+  console.log('Connection to websocket server closed.');
+  connection.value = false;
+  connection_text.value = 'Disconnected';
+});
+
+const launch_on = async () => {
+  setTimeout(function() {
+    window.location.reload(true);
+  }, 3000);
+  await axios({
+    url: 'http://localhost:5000/on',
+    data: {
+      // TODO : None
+    }
+  });
+};
+
+const launch_off = async () => {
+  await axios({
+    url: 'http://localhost:5000/off',
+    data: {
+      // TODO : None
+    }
+  });
+};
+</script>
+
+<style>
+html, body {
+  height: 100% !important;
+}
+
+body {
+  background-color: #444 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items:center !important;
+}
+
+h1, h2, h5, p {
+  color: #f2f2f2 !important;
+}
+
+.all .btn {
+  display: inline-block;
+  margin: .1em;
+  min-width: 10em;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 300;
+  margin: 1em 0;
+  text-align: center;
+}
+</style>
