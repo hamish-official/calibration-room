@@ -5,8 +5,8 @@
 				<h5>센서의 6-DOF 값을 URDF 로 생성합니다.</h5>
 				<span style="color:grey;">
           프로그램에 대한 상세 코드는
-          <a target=”_blank” href="https://github.com/seongjun-working-directories/calibration-room.git">여기</a>에서 확인 가능합니다.<br/>
-          작동 상태: 
+          <a target=”_blank” href="https://github.com/hamish-official/calibration-room.git">여기</a>에서 확인 가능합니다.<br/>
+          작동 상태:
           <span v-if="connection" style="color: green">{{ connection_text }}</span>
           <span v-else style="color: red">{{ connection_text }}</span>
         </span>
