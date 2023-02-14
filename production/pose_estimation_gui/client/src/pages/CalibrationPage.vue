@@ -1,347 +1,331 @@
 <template>
-  <form>
-    <div class="container">
-      <HeaderComponent />
-
-      <div class="row mb-3 d-flex justify-content-center">
-        <button type="button" class="col-2 btn btn-primary v-mar"  @click="store_pose"><strong>STORE<br/>POSE</strong></button>&nbsp;&nbsp;
-        <button type="button" class="col-2 btn btn-dark v-mar" @click="lidar_reference"><strong>ALL LIDAR<br/>REFERENCE</strong></button>&nbsp;&nbsp;
-        <button type="button" class="col-2 btn btn-dark v-mar" @click="front_lidar_current"><strong>FRONT LIDAR<br/>CURRENT</strong></button>&nbsp;&nbsp;
-        <button type="button" class="col-2 btn btn-dark v-mar" @click="rear_lidar_current"><strong>REAR LIDAR<br/>CURRENT</strong></button>
-      </div>
-
-      <div class="row">
-        <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
-          <div class="carousel-indicators">
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
-          </div>
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="bordered" style="background-color: #444;">
-                    <img :src="depth_image_1" style="width: 100%; height: 100%" />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="bordered" style="background-color: #444;">
-                    <img :src="depth_image_2" style="width: 100%; height: 100%" />
-                  </div>
-                </div>
-              </div>
-              <div class="row" style="height:6em"></div>
-              <div class="carousel-caption d-none d-md-block">
-                <h5>Astra Camera (Stereo_s_u3)</h5>
-              </div>
-            </div>
-
-            <div class="carousel-item">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="bordered" style="background-color: #444;">
-                    <img :src="front_lidar_image_1" style="width: 100%; height: 100%" />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="bordered" style="background-color: #444;">
-                    <img :src="front_lidar_image_2" style="width: 100%; height: 100%" />
-                  </div>
-              </div>
-              <div class="row" style="height:6em"></div>
-              </div>
-              <div class="carousel-caption d-none d-md-block">
-                <h5>LS LiDAR (LSM10 | LS01B) [FRONT]</h5>
-              </div>
-            </div>
-
-            <div class="carousel-item">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="bordered" style="background-color: #444;">
-                    <img :src="rear_lidar_image_1" style="width: 100%; height: 100%" />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="bordered" style="background-color: #444;">
-                    <img :src="rear_lidar_image_2" style="width: 100%; height: 100%" />
-                  </div>
-              </div>
-              <div class="row" style="height:6em"></div>
-              </div>
-              <div class="carousel-caption d-none d-md-block">
-                <h5>LS LiDAR (LSM10 | LS01B) [REAR]</h5>
-              </div>
-            </div>
-
-            <div class="carousel-item">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="bordered" style="background-color: #444;">
-                    <img :src="camera_image_1" style="width: 100%; height: 100%" />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="bordered" style="background-color: #444;">
-                    <img :src="camera_image_2" style="width: 100%; height: 100%" />
-                  </div>
-                </div>
-                <div class="row" style="height:6em"></div>
-              </div>
-              <div class="carousel-caption d-none d-md-block">
-                <h5>SVPRO (USB Web Camera HD)</h5>
-              </div>
-            </div>
-          </div>
-
-          <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="row" style="margin-top: 20px; margin-bottom: 12px;">
-        <div class="col-md-12">
-          <h2>Estimated Pose</h2>
-        </div>
-      </div>
-
-      <div class="row d-flex justify-content-center">
-        <div class="col-md-6">
-          <div class="bordered">
-            <div class="row">
-              <div class="col-md-12">
-                <h3 class="no-top">Astra Camera <small>(Stereo_s_u3)</small></h3>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">depth_x</label>
-                  <input type="text" class="form-control" id="" :value="depth_x">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">depth_y</label>
-                  <input type="text" class="form-control" id="" :value="depth_y">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">depth_z</label>
-                  <input type="text" class="form-control" id="" :value="depth_z">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">depth_roll</label>
-                  <input type="text" class="form-control" id="" :value="depth_roll">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">depth_pitch</label>
-                  <input type="text" class="form-control" id="" :value="depth_pitch">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">depth_yaw</label>
-                  <input type="text" class="form-control" id="" :value="depth_yaw">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="bordered">
-            <div class="row">
-              <div class="col-md-12">
-                <h3 class="no-top">SVPRO <small>(USB Web Camera HD)</small></h3>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">camera_x</label>
-                  <input type="text" class="form-control" id="" :value="camera_x">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">camera_y</label>
-                  <input type="text" class="form-control" id="" :value="camera_y">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">camera_z</label>
-                  <input type="text" class="form-control" id="" :value="camera_z">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">camera_roll</label>
-                  <input type="text" class="form-control" id="" :value="camera_roll">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">camera_pitch</label>
-                  <input type="text" class="form-control" id="" :value="camera_pitch">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">camera_yaw</label>
-                  <input type="text" class="form-control" id="" :value="camera_yaw">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-      <div class="row m-2"></div>
-      <div class="row d-flex justify-content-center">
-        <div class="col-md-6">
-          <div class="bordered">
-            <div class="row">
-              <div class="col-md-12">
-                <h3 class="no-top">LS Lidar <small>(LSM10 | LS01B) [FRONT]</small></h3>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">front_lidar_x</label>
-                  <input type="text" class="form-control" id="" :value="front_lidar_x">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">front_lidar_y</label>
-                  <input type="text" class="form-control" id="" :value="front_lidar_y">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">front_lidar_z</label>
-                  <input type="text" class="form-control" id="" :value="front_lidar_z">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">front_lidar_roll</label>
-                  <input type="text" class="form-control" id="" :value="front_lidar_roll">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">front_lidar_pitch</label>
-                  <input type="text" class="form-control" id="" :value="front_lidar_pitch">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">front_lidar_yaw</label>
-                  <input type="text" class="form-control" id="" :value="front_lidar_yaw">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="bordered">
-            <div class="row">
-              <div class="col-md-12">
-                <h3 class="no-top">LS Lidar <small>(LSM10 | LS01B) [REAR]</small></h3>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">rear_lidar_x</label>
-                  <input type="text" class="form-control" id="" :value="rear_lidar_x">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">rear_lidar_y</label>
-                  <input type="text" class="form-control" id="" :value="rear_lidar_y">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">rear_lidar_z</label>
-                  <input type="text" class="form-control" id="" :value="rear_lidar_z">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">rear_lidar_roll</label>
-                  <input type="text" class="form-control" id="" :value="rear_lidar_roll">
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">rear_lidar_pitch</label>
-                  <input type="text" class="form-control" id="" :value="rear_lidar_pitch">
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="">rear_lidar_yaw</label>
-                  <input type="text" class="form-control" id="" :value="rear_lidar_yaw">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!--
-        <div class="row mt-3">
-          <div class="col-md-12">
-            <button type="button" class="btn btn-lg btn-primary v-mar" @click="depth_launcher">Depth Camera Launcher</button>&nbsp;
-            <button type="button" class="btn btn-lg btn-danger v-mar" @click="lidar_launcher">2D Lidar Launcher</button>&nbsp;
-            <button type="button" class="btn btn-lg btn-warning v-mar" @click="camera_launcher">Color Camera Launcher</button>&nbsp;
-            <button type="button" class="btn btn-lg btn-success v-mar" @click="integrated_launcher">Integrated Launcher</button>
-          </div>
-        </div>
-      -->
+  <div class="mt-5">
+    <div class="row mb-3 d-flex justify-content-center">
+      <button type="button" class="col-2 btn btn-primary v-mar"  @click="store_pose"><strong>STORE<br/>POSE</strong></button>&nbsp;&nbsp;
+      <button type="button" class="col-2 btn btn-dark v-mar" @click="lidar_reference"><strong>ALL LIDAR<br/>REFERENCE</strong></button>&nbsp;&nbsp;
+      <button type="button" class="col-2 btn btn-dark v-mar" @click="front_lidar_current"><strong>FRONT LIDAR<br/>CURRENT</strong></button>&nbsp;&nbsp;
+      <button type="button" class="col-2 btn btn-dark v-mar" @click="rear_lidar_current"><strong>REAR LIDAR<br/>CURRENT</strong></button>
     </div>
-  </form>
+
+    <div class="row">
+      <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="bordered" style="background-color: #444;">
+                  <img :src="depth_image_1" style="width: 100%; height: 100%" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bordered" style="background-color: #444;">
+                  <img :src="depth_image_2" style="width: 100%; height: 100%" />
+                </div>
+              </div>
+            </div>
+            <div class="row" style="height:6em"></div>
+            <div class="carousel-caption d-none d-md-block">
+              <h5>Astra Camera (Stereo_s_u3)</h5>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="bordered" style="background-color: #444;">
+                  <img :src="front_lidar_image_1" style="width: 100%; height: 100%" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bordered" style="background-color: #444;">
+                  <img :src="front_lidar_image_2" style="width: 100%; height: 100%" />
+                </div>
+            </div>
+            <div class="row" style="height:6em"></div>
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+              <h5>LS LiDAR (LSM10 | LS01B) [FRONT]</h5>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="bordered" style="background-color: #444;">
+                  <img :src="rear_lidar_image_1" style="width: 100%; height: 100%" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bordered" style="background-color: #444;">
+                  <img :src="rear_lidar_image_2" style="width: 100%; height: 100%" />
+                </div>
+            </div>
+            <div class="row" style="height:6em"></div>
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+              <h5>LS LiDAR (LSM10 | LS01B) [REAR]</h5>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="bordered" style="background-color: #444;">
+                  <img :src="camera_image_1" style="width: 100%; height: 100%" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bordered" style="background-color: #444;">
+                  <img :src="camera_image_2" style="width: 100%; height: 100%" />
+                </div>
+              </div>
+              <div class="row" style="height:6em"></div>
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+              <h5>SVPRO (USB Web Camera HD)</h5>
+            </div>
+          </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px; margin-bottom: 12px;">
+      <div class="col-md-12">
+        <h2>Estimated Pose</h2>
+      </div>
+    </div>
+
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-6">
+        <div class="bordered">
+          <div class="row">
+            <div class="col-md-12">
+              <h3 class="no-top">Astra Camera <small>(Stereo_s_u3)</small></h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">depth_x</label>
+                <input type="text" class="form-control" id="" :value="depth_x">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">depth_y</label>
+                <input type="text" class="form-control" id="" :value="depth_y">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">depth_z</label>
+                <input type="text" class="form-control" id="" :value="depth_z">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">depth_roll</label>
+                <input type="text" class="form-control" id="" :value="depth_roll">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">depth_pitch</label>
+                <input type="text" class="form-control" id="" :value="depth_pitch">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">depth_yaw</label>
+                <input type="text" class="form-control" id="" :value="depth_yaw">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="bordered">
+          <div class="row">
+            <div class="col-md-12">
+              <h3 class="no-top">SVPRO <small>(USB Web Camera HD)</small></h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">camera_x</label>
+                <input type="text" class="form-control" id="" :value="camera_x">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">camera_y</label>
+                <input type="text" class="form-control" id="" :value="camera_y">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">camera_z</label>
+                <input type="text" class="form-control" id="" :value="camera_z">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">camera_roll</label>
+                <input type="text" class="form-control" id="" :value="camera_roll">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">camera_pitch</label>
+                <input type="text" class="form-control" id="" :value="camera_pitch">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">camera_yaw</label>
+                <input type="text" class="form-control" id="" :value="camera_yaw">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="row m-2"></div>
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-6">
+        <div class="bordered">
+          <div class="row">
+            <div class="col-md-12">
+              <h3 class="no-top">LS Lidar <small>(LSM10 | LS01B) [FRONT]</small></h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">front_lidar_x</label>
+                <input type="text" class="form-control" id="" :value="front_lidar_x">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">front_lidar_y</label>
+                <input type="text" class="form-control" id="" :value="front_lidar_y">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">front_lidar_z</label>
+                <input type="text" class="form-control" id="" :value="front_lidar_z">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">front_lidar_roll</label>
+                <input type="text" class="form-control" id="" :value="front_lidar_roll">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">front_lidar_pitch</label>
+                <input type="text" class="form-control" id="" :value="front_lidar_pitch">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">front_lidar_yaw</label>
+                <input type="text" class="form-control" id="" :value="front_lidar_yaw">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="bordered">
+          <div class="row">
+            <div class="col-md-12">
+              <h3 class="no-top">LS Lidar <small>(LSM10 | LS01B) [REAR]</small></h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">rear_lidar_x</label>
+                <input type="text" class="form-control" id="" :value="rear_lidar_x">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">rear_lidar_y</label>
+                <input type="text" class="form-control" id="" :value="rear_lidar_y">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">rear_lidar_z</label>
+                <input type="text" class="form-control" id="" :value="rear_lidar_z">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">rear_lidar_roll</label>
+                <input type="text" class="form-control" id="" :value="rear_lidar_roll">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">rear_lidar_pitch</label>
+                <input type="text" class="form-control" id="" :value="rear_lidar_pitch">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="">rear_lidar_yaw</label>
+                <input type="text" class="form-control" id="" :value="rear_lidar_yaw">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import HeaderComponent from '../components/HeaderComponent.vue';
 import { ref } from 'vue';
 import ROSLIB from 'roslib';
 import axios from 'axios';
@@ -587,6 +571,8 @@ tf_listener.subscribe((message) => {
 <style scoped>
 body {
   background-color: #444 !important;
+  background-size: cover !important;
+  overflow: scroll !important;
 }
 h2, h5, p {
   color: #f2f2f2 !important;

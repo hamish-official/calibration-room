@@ -1,6 +1,6 @@
 <template>
   <HeaderComponent />
-  <router-view />
+  <router-view class="m-2"/>
 </template>
 
 <script setup>
