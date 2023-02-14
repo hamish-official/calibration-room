@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import type { Request, Response } from 'express';
 import { exec } from 'child_process';
 import fs from 'fs';
+import { networkInterfaces } from 'os';
 
 const router = express.Router();
 
@@ -115,6 +116,61 @@ router.get('/off', async (request: Request, response: Response) => {
     console.log(stdout);
     console.error(stderr);
   });
+});
+
+router.get('/get-ip', async (request: Request, response: Response) => {
+  try {
+    const nets = networkInterfaces();
+    let ip = '';
+
+    if (nets) {
+      for (const attribute of Object.keys(nets)) {
+        if ((nets[`${attribute}`] as any)[0].address.startsWith('192')) {
+          ip = (nets[`${attribute}`] as any)[0].address;
+        }
+        if ((nets[`${attribute}`] as any)[1].address.startsWith('192')) {
+          ip = (nets[`${attribute}`] as any)[1].address;
+        }
+      }
+    }
+
+    return response.status(200).json({
+      ip: ip
+    });
+  }
+  catch (err) {
+    return response.status(500).json({
+      data: null
+    });
+  }
+});
+
+router.get('/get-cr-settings', async (request: Request, response: Response) => {
+  try {
+    const data = fs.readFileSync('assets/cr-settings.json', 'utf-8');
+    return response.status(200).json({
+      data: data
+    });
+  }
+  catch (err) {
+    return response.status(500).json({
+      data: null
+    });
+  }
+});
+
+router.post('/cr-settings', async (request: Request, response: Response) => {
+  try {
+    fs.writeFileSync('assets/cr-settings.json', request.body.settings);
+    return response.status(200).json({
+      data: true
+    });
+  }
+  catch (err) {
+    return response.status(500).json({
+      data: false
+    });
+  }
 });
 
 export { router };
