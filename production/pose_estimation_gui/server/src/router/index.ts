@@ -117,4 +117,32 @@ router.get('/off', async (request: Request, response: Response) => {
   });
 });
 
+router.get('/get-cr-settings', async (request: Request, response: Response) => {
+  try {
+    const data = fs.readFileSync('assets/cr-settings.json', 'utf-8');
+    return response.status(200).json({
+      data: data
+    })
+  }
+  catch (err) {
+    return response.status(500).json({
+      data: null
+    });
+  }
+});
+
+router.post('/cr-settings', async (request: Request, response: Response) => {
+  try {
+    fs.writeFileSync('assets/cr-settings.json', request.body.settings);
+    return response.status(200).json({
+      data: true
+    });
+  }
+  catch (err) {
+    return response.status(500).json({
+      data: false
+    });
+  }
+});
+
 export { router };
