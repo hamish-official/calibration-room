@@ -2,7 +2,7 @@
   <div class="all">
     <div class="container">
 			<div class="margin-bottom-basic mb-4">
-				<h5>센서의 6-DOF 값을 URDF 로 생성합니다.</h5>
+				<h5>센서의 6-DOF 값을 계산하여 URDF 로 생성합니다.</h5>
 				<span style="color:grey;">
           작동 상태:
           <span v-if="connection" style="color: green">{{ connection_text }}</span>
