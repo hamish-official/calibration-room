@@ -103,10 +103,6 @@ const launch_off = async () => {
 </script>
 
 <style>
-html, body {
-  height: 100% !important;
-}
-
 body {
   background-color: #444 !important;
   display: flex !important;
