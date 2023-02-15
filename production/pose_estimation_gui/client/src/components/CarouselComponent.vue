@@ -26,12 +26,12 @@
           <div class="row">
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="depth_1_image.image_1.value" style="width: 100%; height: 100%" />
+                <img :src="depth_2_image.image_1.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="depth_1_image.image_2.value" style="width: 100%; height: 100%" />
+                <img :src="depth_2_image.image_2.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="row" style="height:6em"></div>
@@ -40,12 +40,12 @@
           <div class="row">
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="depth_1_image.image_1.value" style="width: 100%; height: 100%" />
+                <img :src="depth_3_image.image_1.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="depth_1_image.image_2.value" style="width: 100%; height: 100%" />
+                <img :src="depth_3_image.image_2.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="row" style="height:6em"></div>
@@ -138,7 +138,7 @@
 
 <script setup>
 import ROSLIB from 'roslib';
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
   ros: ROSLIB.Ros
