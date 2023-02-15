@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/style.css">
 
     <script>
-      let ros, viewer, gridClient, tfClient, front_scan, rear_scan, depth_world_pointcloud, depth_camera_pointcloud;
+      let ros, viewer, gridClient, tfClient, scan1, scan2, scan3, depth_world_pointcloud, depth_camera_pointcloud;
 
       function init() {
         // Connect to ROS.
@@ -46,36 +46,44 @@
           fixedFrame : 'map',
         });
 
-        front_scan = new ROS3D.LaserScan({
+        scan1 = new ROS3D.LaserScan({
           ros: ros,
           tfClient: tfClient,
           rootObject: viewer.scene,
           topic: '/scan1',
-          material: { size: 0.08, color: 0xff0000 },   // red
+          material: { size: 0.08, color: 0xffff00 },
         });
 
-        rear_scan = new ROS3D.LaserScan({
+        scan2 = new ROS3D.LaserScan({
           ros: ros,
           tfClient: tfClient,
           rootObject: viewer.scene,
           topic: '/scan2',
-          material: { size: 0.08, color: 0x00ff00 },   // green
+          material: { size: 0.08, color: 0xff00ff },
+        });
+        
+        scan3 = new ROS3D.LaserScan({
+          ros: ros,
+          tfClient: tfClient,
+          rootObject: viewer.scene,
+          topic: '/scan3',
+          material: { size: 0.08, color: 0x00ffff },
         });
 
         depth_world_pointcloud = new ROS3D.PointCloud2({
           ros: ros,
           tfClient: tfClient,
           rootObject: viewer.scene,
-          topic: '/depth_world_corners_messages',
-          material: { size: 0.08, color: 0xffffff },   // white
+          topic: '/camera/depth/points',
+          material: { size: 0.08, color: 0x00ff00 },
         });
 
         depth_camera_pointcloud = new ROS3D.PointCloud2({
           ros: ros,
           tfClient: tfClient,
           rootObject: viewer.scene,
-          topic: '/depth_camera_corners_messages',
-          material: { size: 0.08, color: 0x0000ff },   // blue
+          topic: '/camera/depth_registered/points',
+          material: { size: 0.08, color: 0xff000000 },
         });
       }
       </script>
