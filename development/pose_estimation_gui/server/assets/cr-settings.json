@@ -1,1 +1,1 @@
-{"camera_activate":true,"depth1_activate":true,"depth2_activate":false,"depth3_activate":false,"lidar1_activate":true,"lidar2_activate":true,"lidar3_activate":false}
+{"camera1_activate":true,"depth1_activate":true,"depth2_activate":false,"depth3_activate":false,"lidar1_activate":true,"lidar2_activate":true,"lidar3_activate":false}
