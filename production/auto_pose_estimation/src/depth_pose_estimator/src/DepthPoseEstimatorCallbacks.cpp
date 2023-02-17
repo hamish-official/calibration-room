@@ -30,7 +30,7 @@ void DepthPoseEstimator::image_callback(const sensor_msgs::Image::ConstPtr& imag
   compressed_image.data = data;
   compressed_image_publisher_1.publish(compressed_image);
 
-  cv::imshow("default", copied_frame);
+  cv::imshow("DEFAULT", copied_frame);
 
   chessboard_detection(copied_frame);
 

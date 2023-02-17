@@ -39,15 +39,15 @@ DepthPoseEstimator::DepthPoseEstimator(
   camera_martix = cv::Mat(3, 3, CV_64FC1, intrinsic_parameters);
   distortion_coefficients = cv::Mat(4, 1, CV_64FC1, radial_tangential_distortion);
 
-  cv::namedWindow("default");
-  cv::namedWindow("found");
+  cv::namedWindow("DEFAULT");
+  cv::namedWindow("FOUND");
 }
 
 // *** 소멸자 함수 *** //
 DepthPoseEstimator::~DepthPoseEstimator()
 {
-  cv::destroyWindow("default");
-  cv::destroyWindow("found");
+  cv::destroyWindow("DEFAULT");
+  cv::destroyWindow("FOUND");
 }
 
 // *** Chessboard를 찾아내는 함수 *** //
@@ -69,7 +69,7 @@ void DepthPoseEstimator::chessboard_detection(cv::Mat& copied_frame)
     detected_corners = chessboard_corners;
 
     cv::drawChessboardCorners(frame, chessboard_dimensions, chessboard_corners, found);
-    cv::imshow("found", frame);
+    cv::imshow("FOUND", frame);
 
     std::vector<uchar> data;
     sensor_msgs::CompressedImage compressed_image;
@@ -165,12 +165,6 @@ void DepthPoseEstimator::pose_verification(std::tuple<Eigen::Matrix3f, Eigen::Ve
   Rt_4x4(3, 1) = std::get<1>(Rt)(1);
   Rt_4x4(3, 2) = std::get<1>(Rt)(2);
   Rt_4x4(3, 3) = 1;
-
-  // NOT IMPLEMENTED YET
-  // [CODE] ...
-
-  // 검증 과정에서 연산된 pointcloud가 여기서 publish됨
-  // [YET] verification_publisher.publish();
 }
 
 // *** 체크보드의 월드좌표계를 저장하는 함수 *** //
@@ -182,7 +176,7 @@ void DepthPoseEstimator::create_world_coordinate_system()
   {
     for (int j = 0; j < chessboard_dimensions.width; j++)
     {
-      cv::Point3f corner(i * (chessboard_edge_size), j * (chessboard_edge_size), 0.0f);
+      cv::Point3f corner(0.0f, 0.3f + j * (chessboard_edge_size), 0.7f - i * (chessboard_edge_size));
       pcl::PointXYZ corner_point(corner.x, corner.y, corner.z);
       object_points.push_back(corner);
       world_corners_messages.push_back(corner_point);
