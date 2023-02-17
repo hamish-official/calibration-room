@@ -34,3 +34,19 @@ $ # /depth2/ir/camera_info
 $ # /depth2/ir/image_raw
 
 -- depth_pose_estimator의 경우, /depth1/depth_registered/points, /depth1/color/image_raw를 사용
+
+-- OpenNi2 관련 오류가 발생하는 경우 아래의 커맨드를 실행
+
+$ sudo apt install git libusb-1.0-0-dev libudev-dev
+$ sudo apt install openjdk-8-jdk
+$ sudo apt install freeglut3-dev
+$ cd ~
+$ mkdir -p repos
+$ cd repos  # create $HOME/repos if it doesn't exist; then, enter it
+$ git clone https://github.com/occipital/OpenNI2.git  # We used to have a fork off 6857677beee08e264fc5aeecb1adf647a7d616ab with working copy of Xtion Pro Live OpenNI2 driver.
+$ cd OpenNI2
+$ make -j$(nproc)  # compile
+$ sudo ln -s $PWD/Bin/x64-Release/libOpenNI2.so /usr/local/lib/  # $PWD should be /yourPathTo/OpenNI2
+$ sudo ln -s $PWD/Bin/x64-Release/OpenNI2/ /usr/local/lib/  # $PWD should be /yourPathTo/OpenNI2
+$ sudo ln -s $PWD/Include /usr/local/include/OpenNI2  # $PWD should be /yourPathTo/OpenNI2
+$ sudo ldconfig
