@@ -1,0 +1,36 @@
+$ roscd astra_camera
+$ ./scripts/create_udev_rules
+$ roslaunch astra_camera list_devices.launch
+$ # [ INFO] [1676599458.058411166]: Found 2 devices
+$ # Device connected: Astra
+$ # URI: 2bc5/0614@1/16
+$ # Warning: USB events thread - failed to set priority. This might cause loss of data...
+$ # Serial number: AY2T1120290
+$ # Device connected: Astra
+$ # URI: 2bc5/0614@1/15
+$ # Warning: USB events thread - failed to set priority. This might cause loss of data...
+$ # Serial number: AY2T1120278
+$ roscd astra_camera/launch
+
+-- 이후 mutli_astra.launch 및 stereo_s_u3.launch를 변경함
+
+$ roslaunch astra_camera mutli_astra.launch
+$ rostopic list
+$ # /depth1/color/camera_info
+$ # /depth1/color/image_raw
+$ # /depth1/depth/camera_info
+$ # /depth1/depth/image_raw
+$ # /depth1/depth/points
+$ # /depth1/depth_registered/points
+$ # /depth1/ir/camera_info
+$ # /depth1/ir/image_raw
+$ # /depth2/color/camera_info
+$ # /depth2/color/image_raw
+$ # /depth2/depth/camera_info
+$ # /depth2/depth/image_raw
+$ # /depth2/depth/points
+$ # /depth2/depth_registered/points
+$ # /depth2/ir/camera_info
+$ # /depth2/ir/image_raw
+
+-- depth_pose_estimator의 경우, /depth1/depth_registered/points, /depth1/color/image_raw를 사용
