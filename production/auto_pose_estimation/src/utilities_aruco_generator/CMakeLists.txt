@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(utilities)
+project(aruco_generator)
 add_compile_options(-std=c++14)
 
 find_package(catkin REQUIRED COMPONENTS
@@ -14,6 +14,13 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
   tf
+)
+
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES utilities_aruco_generator
+  CATKIN_DEPENDS cv_bridge geometry_msgs image_transport laser_geometry pcl_conversions pcl_ros roscpp rospy sensor_msgs std_msgs tf
+#  DEPENDS system_lib
 )
 
 ## Generate messages in the 'msg' folder
@@ -51,5 +58,5 @@ include
   ${OpenCV_INCLUDE_DIRS}
 )
 
-add_executable(aruco_generator src/aruco_generator.cpp)
-target_link_libraries(aruco_generator ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+add_executable(aruco_generation src/aruco_generation.cpp)
+target_link_libraries(aruco_generation ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
