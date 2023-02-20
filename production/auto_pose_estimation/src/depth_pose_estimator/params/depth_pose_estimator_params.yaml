@@ -3,8 +3,8 @@ DEPTH_REGISTERED_TOPIC: /camera/depth_registered/points
 DEPTH_TF: /depth_tf
 
 # Chessboard 규격에 대한 파라미터
-CHESSBOARD_EDGE_SIZE: 0.099
-CHESSBOARD_WIDTH: 11
+CHESSBOARD_EDGE_SIZE: 0.1005
+CHESSBOARD_WIDTH: 9
 CHESSBOARD_HEIGHT: 7
 
 # 카메라 프레임에 대한 파라미터

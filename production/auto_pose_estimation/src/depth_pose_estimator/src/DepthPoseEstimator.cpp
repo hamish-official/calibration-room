@@ -176,7 +176,7 @@ void DepthPoseEstimator::create_world_coordinate_system()
   {
     for (int j = 0; j < chessboard_dimensions.width; j++)
     {
-      cv::Point3f corner(0.0f, 0.3f + j * (chessboard_edge_size), 0.7f - i * (chessboard_edge_size));
+      cv::Point3f corner(1.36f, -0.35f + j * (chessboard_edge_size), 0.6f - i * (chessboard_edge_size));
       pcl::PointXYZ corner_point(corner.x, corner.y, corner.z);
       object_points.push_back(corner);
       world_corners_messages.push_back(corner_point);
