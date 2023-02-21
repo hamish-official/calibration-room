@@ -515,6 +515,32 @@ const lidar_3_current = async () => {
   });
 };
 
+const quaternion2euler = (sensor, message)=>{
+  sensor.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
+  sensor.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
+  sensor.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
+
+  let qx, qy, qz, qw;
+  qx = message.transforms[0].transform.rotation.x;
+  qy = message.transforms[0].transform.rotation.y;
+  qz = message.transforms[0].transform.rotation.z;
+  qw = message.transforms[0].transform.rotation.w;
+
+  let t0, t1, t2, t3, t4;
+
+  t0 = 2.0 * (qw*qx + qy*qz);
+  t1 = 1.0 - 2.0 * (qx*qx + qy*qy);
+  t2 = 2.0 * (qw*qy - qz*qx);
+  if (t2 > 1.0) t2 = 1.0;
+  if (t2 < -1.0) t2 = -1.0;
+  t3 = 2.0 * (qw*qz + qx*qy);
+  t4 = 1.0 - 2.0 * (qy*qy + qz*qz);
+
+  sensor.roll.value = Math.atan2(t0, t1).toString().substring(0, 6);
+  sensor.pitch.value = Math.asin(t2).toString().substring(0, 6);
+  sensor.yaw.value = Math.atan2(t3, t4).toString().substring(0, 6);
+}
+
 const tf_listener = new ROSLIB.Topic({
   ros: ros,
   name: '/tf',
@@ -523,36 +549,16 @@ const tf_listener = new ROSLIB.Topic({
 
 tf_listener.subscribe((message) => {
   if (message.transforms[0].child_frame_id === '/camera_01_tf') {
-    camera_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
-    camera_1.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
-    camera_1.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
-    camera_1.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
-    camera_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
-    camera_1.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
+    quaternion2euler(camera_1, message)
   }
   if (message.transforms[0].child_frame_id === 'depth_01_tf') {
-    depth_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
-    depth_1.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
-    depth_1.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
-    depth_1.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
-    depth_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
-    depth_1.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
+    quaternion2euler(depth_1, message);
   }
   if (message.transforms[0].child_frame_id === 'depth_02_tf') {
-    depth_2.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
-    depth_2.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
-    depth_2.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
-    depth_2.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
-    depth_2.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
-    depth_2.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
+    quaternion2euler(depth_2, message);
   }
   if (message.transforms[0].child_frame_id === 'depth_03_tf') {
-    depth_3.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
-    depth_3.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
-    depth_3.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
-    depth_3.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
-    depth_3.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
-    depth_3.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
+    quaternion2euler(depth_3, message);
   }
   if (message.transforms[0].child_frame_id === '/lidar_01_tf') {
     lidar_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
