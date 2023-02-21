@@ -90,9 +90,6 @@ void DepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::ConstPtr
 
   if (!(std::isnan(x) + std::isnan(y) + std::isnan(z)))
   {
-    if (yaw < 0) yaw = yaw + 3.14;
-    x *= 0.1;
-
     std::cout <<"x, y, z >>> " << x << ", " << y << ", " << z << std::endl;
     std::cout <<"roll, pitch, yaw >>> " << roll << ", " << pitch << ", " << yaw << std::endl;
     

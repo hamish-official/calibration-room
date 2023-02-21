@@ -53,6 +53,8 @@ private:
   ros::Publisher compressed_image_publisher_1, compressed_image_publisher_2;
 
   std::string depth_color_topic, depth_registered_topic, depth_tf;
+  std::string depth_image_01, depth_image_02;
+  std::string depth_camera_pointcloud_topic, depth_world_pointcloud_topic;
 
   int frames_per_seconds;
   cv::Size chessboard_dimensions;

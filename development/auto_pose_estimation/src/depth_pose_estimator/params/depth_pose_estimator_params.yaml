@@ -6,12 +6,12 @@ DEPTH_REGISTERED_TOPIC: /camera/depth_registered/points
 
 
 DEPTH_IMAGE_01_TOPIC: /depth_01_image_01
-DEPTH_IMAGE__02_TOPIC: /depth_01_image_02
+DEPTH_IMAGE_02_TOPIC: /depth_01_image_02
 
 DEPTH_CAMERA_POINTCLOUD_TOPIC: /depth_01_camera_pointcloud
 DEPTH_WORLD_POINTCLOUD_TOPIC: /depth_01_world_pointcloud
 
-DEPTH_TF_TOPIC: /depth_01_tf
+DEPTH_TF_TOPIC: depth_01_tf
 
 # Chessboard 규격에 대한 파라미터
 CHESSBOARD_EDGE_SIZE: 0.1003

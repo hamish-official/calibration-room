@@ -9,13 +9,13 @@ DepthPoseEstimator::DepthPoseEstimator(ros::NodeHandle& node_handle) {
   depth_subscriber = node_handle.subscribe(depth_registered_topic, 1, &DepthPoseEstimator::depth_callback, this);
 
   // publisher
-  world_corners_publisher = node_handle.advertise<sensor_msgs::PointCloud2>("depth_world_corners_messages", 1);
-  camera_corners_publisher = node_handle.advertise<sensor_msgs::PointCloud2>("depth_camera_corners_messages", 1);
-  verification_publisher = node_handle.advertise<sensor_msgs::PointCloud2>("depth_verification_messages", 1);
+  world_corners_publisher = node_handle.advertise<sensor_msgs::PointCloud2>(depth_world_pointcloud_topic, 1);
+  camera_corners_publisher = node_handle.advertise<sensor_msgs::PointCloud2>(depth_camera_pointcloud_topic, 1);
+  // [CANDIDATE] verification_publisher = node_handle.advertise<sensor_msgs::PointCloud2>("depth_verification_messages", 1);
 
   // image_publisher
-  compressed_image_publisher_1 = node_handle.advertise<sensor_msgs::CompressedImage>("depth_image_message_1", 1);
-  compressed_image_publisher_2 = node_handle.advertise<sensor_msgs::CompressedImage>("depth_image_message_2", 1);
+  compressed_image_publisher_1 = node_handle.advertise<sensor_msgs::CompressedImage>(depth_image_01, 1);
+  compressed_image_publisher_2 = node_handle.advertise<sensor_msgs::CompressedImage>(depth_image_02, 1);
 
   create_world_coordinate_system();
 
@@ -166,7 +166,7 @@ void DepthPoseEstimator::create_world_coordinate_system()
   {
     for (int j = 0; j < chessboard_dimensions.width; j++)
     {
-      cv::Point3f corner(1.36f, -0.35f + j * (chessboard_edge_size), 0.6f - i * (chessboard_edge_size));
+      cv::Point3f corner(1.36f, 0.35f - j * (chessboard_edge_size), 0.6f - i * (chessboard_edge_size));
       pcl::PointXYZ corner_point(corner.x, corner.y, corner.z);
       object_points.push_back(corner);
       world_corners_messages.push_back(corner_point);
@@ -249,4 +249,12 @@ void DepthPoseEstimator::parameter_initializer(ros::NodeHandle& node_handle)
   node_handle.getParam("/depth_pose_estimator/DEPTH_COLOR_TOPIC", depth_color_topic);
   node_handle.getParam("/depth_pose_estimator/DEPTH_REGISTERED_TOPIC", depth_registered_topic);
   node_handle.getParam("/depth_pose_estimator/DEPTH_TF_TOPIC", depth_tf);
+
+  // 이미지 관련 변수
+  node_handle.getParam("/depth_pose_estimator/DEPTH_IMAGE_01_TOPIC", depth_image_01);
+  node_handle.getParam("/depth_pose_estimator/DEPTH_IMAGE_02_TOPIC", depth_image_02);
+
+  // 포인트클라우드 관련 변수
+  node_handle.getParam("/depth_pose_estimator/DEPTH_CAMERA_POINTCLOUD_TOPIC", depth_camera_pointcloud_topic);
+  node_handle.getParam("/depth_pose_estimator/DEPTH_WORLD_POINTCLOUD_TOPIC", depth_world_pointcloud_topic);
 }
