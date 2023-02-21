@@ -30,7 +30,7 @@ void DepthPoseEstimator::image_callback(const sensor_msgs::Image::ConstPtr& imag
   compressed_image.data = data;
   compressed_image_publisher_1.publish(compressed_image);
 
-  cv::imshow("default", copied_frame);
+  cv::imshow("DEFAULT", copied_frame);
 
   chessboard_detection(copied_frame);
 
@@ -52,12 +52,21 @@ void DepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::ConstPtr
 
   for (auto &detected_corner : detected_corners)
   {
-    pcl::PointXYZ _corner_point_xyz = pcl_depth_points.at(detected_corner.x - 3, detected_corner.y + 50);
-    // [ALTERNATIVE] pcl::PointXYZ _corner_point_xyz = pcl_depth_points.at(detected_corner.x, detected_corner.y);
-    cv::Point3f _corner(_corner_point_xyz.x, _corner_point_xyz.y, _corner_point_xyz.z);
+    // IR 영상 및 COLOR 영상 간 좌표축 차이 반영
+    // [ORIGINAL]
+    pcl::PointXYZ _corner_point_xyz = pcl_depth_points.at(detected_corner.x, detected_corner.y);
+    // [ALTERNATIVE] pcl::PointXYZ _corner_point_xyz = pcl_depth_points.at(detected_corner.x - 3, detected_corner.y + 50);
+
+    // 오른손 법칙에 맞게 좌표축을 변경 내용 반영
+    // [ORIGINAL] cv::Point3f _corner(_corner_point_xyz.x, _corner_point_xyz.y, _corner_point_xyz.z);
+    // [ALTERNATIVE]
+    cv::Point3f _corner(_corner_point_xyz.z, _corner_point_xyz.x * (-1), _corner_point_xyz.y * (-1));
+
 
     chessboard_information_vector.push_back(_corner);
     camera_corners_messages.push_back(_corner_point_xyz);
+
+    std::cout << _corner.x << " " << _corner.y << " " << _corner.z << std::endl;
   }
 
   std::tuple<Eigen::Matrix3f, Eigen::Vector3f> Rt = rigid_transformation(chessboard_information_vector);  // [CORE METHOD]
@@ -79,11 +88,14 @@ void DepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::ConstPtr
   );
   yaw = std::atan2(eigen_rotation_matrix(1, 0), eigen_rotation_matrix(0, 0));
 
-  std::cout <<"x, y, z >>> " << x << ", " << y << ", " << z << std::endl;
-  std::cout <<"roll, pitch, yaw >>> " << roll << ", " << pitch << ", " << yaw << std::endl;
-
   if (!(std::isnan(x) + std::isnan(y) + std::isnan(z)))
   {
+    if (yaw < 0) yaw = yaw + 3.14;
+    x *= 0.1;
+
+    std::cout <<"x, y, z >>> " << x << ", " << y << ", " << z << std::endl;
+    std::cout <<"roll, pitch, yaw >>> " << roll << ", " << pitch << ", " << yaw << std::endl;
+    
     static tf::TransformBroadcaster tf_broadcaster;
     tf::Transform tf_transform;
     tf::Quaternion tf_quaternion;
