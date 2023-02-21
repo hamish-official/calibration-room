@@ -419,8 +419,7 @@ ros.on('close', () => {
 });
 
 // *** variables *** //
-let camera_1, depth_1, depth_2, depth_3, lidar_1, lidar_2, lidar_3;
-camera_1 = depth_1 = depth_2 = depth_3 = lidar_1 = lidar_2 = lidar_3 = {
+const default_value = {
   x: ref('0'),
   y: ref('0'),
   z: ref('0'),
@@ -428,6 +427,14 @@ camera_1 = depth_1 = depth_2 = depth_3 = lidar_1 = lidar_2 = lidar_3 = {
   pitch: ref('0'),
   yaw: ref('0'),
 };
+
+const camera_1 = JSON.parse(JSON.stringify(default_value));
+const depth_1 = JSON.parse(JSON.stringify(default_value));
+const depth_2 = JSON.parse(JSON.stringify(default_value));
+const depth_3 = JSON.parse(JSON.stringify(default_value));
+const lidar_1 = JSON.parse(JSON.stringify(default_value));
+const lidar_2 = JSON.parse(JSON.stringify(default_value));
+const lidar_3 = JSON.parse(JSON.stringify(default_value));
 
 // *** axios *** //
 const store_pose = async () => {
