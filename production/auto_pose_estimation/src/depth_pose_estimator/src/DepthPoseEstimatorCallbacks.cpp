@@ -66,7 +66,7 @@ void DepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::ConstPtr
     chessboard_information_vector.push_back(_corner);
     camera_corners_messages.push_back(_corner_point_xyz);
 
-    std::cout << _corner_point_xyz.x << " " << _corner_point_xyz.y << " " << _corner_point_xyz.z << std::endl;
+    std::cout << _corner.x << " " << _corner.y << " " << _corner.z << std::endl;
   }
 
   std::tuple<Eigen::Matrix3f, Eigen::Vector3f> Rt = rigid_transformation(chessboard_information_vector);  // [CORE METHOD]
@@ -90,6 +90,9 @@ void DepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::ConstPtr
 
   if (!(std::isnan(x) + std::isnan(y) + std::isnan(z)))
   {
+    if (yaw < 0) yaw = yaw + 3.14;
+    x *= 0.1;
+
     std::cout <<"x, y, z >>> " << x << ", " << y << ", " << z << std::endl;
     std::cout <<"roll, pitch, yaw >>> " << roll << ", " << pitch << ", " << yaw << std::endl;
     

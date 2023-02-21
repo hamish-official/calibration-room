@@ -71,10 +71,7 @@ private:
 
 public:
   // *** Constructor && Destrcutor *** //
-  DepthPoseEstimator(
-    ros::NodeHandle& node_handle, float _chessboard_edge_size,
-    int _chessboard_width, int _chessboard_height, int _frames_per_seconds
-  );
+  DepthPoseEstimator(ros::NodeHandle& node_handle);
   ~DepthPoseEstimator();
 
   // *** callbacks *** //

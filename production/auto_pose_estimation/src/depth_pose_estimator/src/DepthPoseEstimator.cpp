@@ -1,10 +1,7 @@
 #include "depth_pose_estimator/DepthPoseEstimator.hpp"
 
 // *** 생성자 함수 *** //
-DepthPoseEstimator::DepthPoseEstimator(
-  ros::NodeHandle& node_handle, float _chessboard_edge_size,
-  int _chessboard_width, int _chessboard_height, int _frames_per_seconds
-) {
+DepthPoseEstimator::DepthPoseEstimator(ros::NodeHandle& node_handle) {
   parameter_initializer(node_handle);
 
   // subscriber
@@ -19,13 +16,6 @@ DepthPoseEstimator::DepthPoseEstimator(
   // image_publisher
   compressed_image_publisher_1 = node_handle.advertise<sensor_msgs::CompressedImage>("depth_image_message_1", 1);
   compressed_image_publisher_2 = node_handle.advertise<sensor_msgs::CompressedImage>("depth_image_message_2", 1);
-
-  // 초당 프레임
-  frames_per_seconds = _frames_per_seconds;
-
-  // chessboard 관련 변수
-  chessboard_dimensions = cv::Size(_chessboard_width - 1, _chessboard_height - 1);  // y x 순
-  chessboard_edge_size = _chessboard_edge_size;
 
   create_world_coordinate_system();
 
@@ -243,7 +233,20 @@ sensor_msgs::PointCloud2 DepthPoseEstimator::pcl_to_sensor(pcl::PointCloud<pcl::
 
 void DepthPoseEstimator::parameter_initializer(ros::NodeHandle& node_handle)
 {
+  // 초당 프레임
+  node_handle.getParam("/depth_pose_estimator/FRAMES_PER_SECONDS", frames_per_seconds);
+
+  // chessboard 관련 변수 1
+  node_handle.getParam("/depth_pose_estimator/CHESSBOARD_EDGE_SIZE", chessboard_edge_size);
+  
+  // chessboard 관련 변수 2
+  int _chessboard_width, _chessboard_height;
+  node_handle.getParam("/depth_pose_estimator/CHESSBOARD_WIDTH", _chessboard_width);
+  node_handle.getParam("/depth_pose_estimator/CHESSBOARD_HEIGHT", _chessboard_height);
+  chessboard_dimensions = cv::Size(_chessboard_width - 1, _chessboard_height - 1);  // y x 순
+
+  // topic 관련 변수
   node_handle.getParam("/depth_pose_estimator/DEPTH_COLOR_TOPIC", depth_color_topic);
   node_handle.getParam("/depth_pose_estimator/DEPTH_REGISTERED_TOPIC", depth_registered_topic);
-  node_handle.getParam("/depth_pose_estimator/DEPTH_TF", depth_tf);
+  node_handle.getParam("/depth_pose_estimator/DEPTH_TF_TOPIC", depth_tf);
 }
