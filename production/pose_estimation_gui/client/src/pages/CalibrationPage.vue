@@ -419,22 +419,13 @@ ros.on('close', () => {
 });
 
 // *** variables *** //
-const default_value = {
-  x: ref('0'),
-  y: ref('0'),
-  z: ref('0'),
-  roll: ref('0'),
-  pitch: ref('0'),
-  yaw: ref('0'),
-};
-
-const camera_1 = JSON.parse(JSON.stringify(default_value));
-const depth_1 = JSON.parse(JSON.stringify(default_value));
-const depth_2 = JSON.parse(JSON.stringify(default_value));
-const depth_3 = JSON.parse(JSON.stringify(default_value));
-const lidar_1 = JSON.parse(JSON.stringify(default_value));
-const lidar_2 = JSON.parse(JSON.stringify(default_value));
-const lidar_3 = JSON.parse(JSON.stringify(default_value));
+const camera_1 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
+const depth_1 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
+const depth_2 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
+const depth_3 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
+const lidar_1 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
+const lidar_2 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
+const lidar_3 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
 
 // *** axios *** //
 const store_pose = async () => {
@@ -539,7 +530,7 @@ tf_listener.subscribe((message) => {
     camera_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     camera_1.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
-  if (message.transforms[0].child_frame_id === '/depth_01_tf') {
+  if (message.transforms[0].child_frame_id === 'depth_01_tf') {
     depth_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     depth_1.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     depth_1.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
@@ -547,7 +538,7 @@ tf_listener.subscribe((message) => {
     depth_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     depth_1.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
-  if (message.transforms[0].child_frame_id === '/depth_02_tf') {
+  if (message.transforms[0].child_frame_id === 'depth_02_tf') {
     depth_2.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     depth_2.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     depth_2.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
@@ -555,7 +546,7 @@ tf_listener.subscribe((message) => {
     depth_2.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     depth_2.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
-  if (message.transforms[0].child_frame_id === '/depth_03_tf') {
+  if (message.transforms[0].child_frame_id === 'depth_03_tf') {
     depth_3.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     depth_3.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     depth_3.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);

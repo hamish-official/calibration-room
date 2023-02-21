@@ -144,11 +144,13 @@ const props = defineProps({
   ros: ROSLIB.Ros
 });
 
-let depth_1_image, depth_2_image, depth_3_image, camera_1_image, lidar_1_image, lidar_2_image, lidar_3_image;
-depth_1_image = depth_2_image = depth_3_image = camera_1_image = lidar_1_image = lidar_2_image = lidar_3_image = {
-  image_1: ref(''),
-  image_2: ref(''),
-};
+const depth_1_image = { image_1: ref(''), image_2: ref('') };
+const depth_2_image = { image_1: ref(''), image_2: ref('') };
+const depth_3_image = { image_1: ref(''), image_2: ref('') };
+const camera_1_image = { image_1: ref(''), image_2: ref('') };
+const lidar_1_image = { image_1: ref(''), image_2: ref('') };
+const lidar_2_image = { image_1: ref(''), image_2: ref('') };
+const lidar_3_image = { image_1: ref(''), image_2: ref('') };
 
 const depth_1_image_1 = new ROSLIB.Topic({
   ros: props.ros,
@@ -162,7 +164,7 @@ depth_1_image_1.subscribe((message) => {
 
 const depth_1_image_2 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/depth_01_image_01',
+  name: '/depth_01_image_02',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
