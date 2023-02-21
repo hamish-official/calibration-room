@@ -29,15 +29,15 @@ DepthPoseEstimator::DepthPoseEstimator(ros::NodeHandle& node_handle) {
   camera_martix = cv::Mat(3, 3, CV_64FC1, intrinsic_parameters);
   distortion_coefficients = cv::Mat(4, 1, CV_64FC1, radial_tangential_distortion);
 
-  cv::namedWindow("DEFAULT");
-  cv::namedWindow("FOUND");
+  // [TEST] cv::namedWindow("DEFAULT");
+  // [TEST] cv::namedWindow("FOUND");
 }
 
 // *** 소멸자 함수 *** //
 DepthPoseEstimator::~DepthPoseEstimator()
 {
-  cv::destroyWindow("DEFAULT");
-  cv::destroyWindow("FOUND");
+  // [TEST] cv::destroyWindow("DEFAULT");
+  // [TEST] cv::destroyWindow("FOUND");
 }
 
 // *** Chessboard를 찾아내는 함수 *** //
@@ -59,7 +59,7 @@ void DepthPoseEstimator::chessboard_detection(cv::Mat& copied_frame)
     detected_corners = chessboard_corners;
 
     cv::drawChessboardCorners(frame, chessboard_dimensions, chessboard_corners, found);
-    cv::imshow("FOUND", frame);
+    // [TEST] cv::imshow("FOUND", frame);
 
     std::vector<uchar> data;
     sensor_msgs::CompressedImage compressed_image;
