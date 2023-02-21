@@ -524,7 +524,7 @@ const tf_listener = new ROSLIB.Topic({
 });
 
 tf_listener.subscribe((message) => {
-  if (message.transforms[0].child_frame_id === '/camera_1_tf') {
+  if (message.transforms[0].child_frame_id === '/camera_01_tf') {
     camera_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     camera_1.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     camera_1.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
@@ -532,7 +532,7 @@ tf_listener.subscribe((message) => {
     camera_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     camera_1.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
-  if (message.transforms[0].child_frame_id === '/depth_1_tf') {
+  if (message.transforms[0].child_frame_id === '/depth_01_tf') {
     depth_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     depth_1.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     depth_1.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
@@ -540,7 +540,7 @@ tf_listener.subscribe((message) => {
     depth_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     depth_1.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
-  if (message.transforms[0].child_frame_id === '/depth_2_tf') {
+  if (message.transforms[0].child_frame_id === '/depth_02_tf') {
     depth_2.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     depth_2.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     depth_2.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
@@ -548,7 +548,7 @@ tf_listener.subscribe((message) => {
     depth_2.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     depth_2.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
-  if (message.transforms[0].child_frame_id === '/depth_3_tf') {
+  if (message.transforms[0].child_frame_id === '/depth_03_tf') {
     depth_3.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     depth_3.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     depth_3.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
@@ -556,7 +556,7 @@ tf_listener.subscribe((message) => {
     depth_3.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     depth_3.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
-  if (message.transforms[0].child_frame_id === '/lidar_1_tf') {
+  if (message.transforms[0].child_frame_id === '/lidar_01_tf') {
     lidar_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     lidar_1.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     // [INVALID] lidar_1.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
@@ -564,7 +564,7 @@ tf_listener.subscribe((message) => {
     // [INVALID] lidar_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     lidar_1.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
-  if (message.transforms[0].child_frame_id === '/lidar_2_tf') {
+  if (message.transforms[0].child_frame_id === '/lidar_02_tf') {
     lidar_2.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     lidar_2.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     // [INVALID] lidar_2.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
@@ -572,7 +572,7 @@ tf_listener.subscribe((message) => {
     // [INVALID] lidar_2.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     lidar_2.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
-  if (message.transforms[0].child_frame_id === '/lidar_3_tf') {
+  if (message.transforms[0].child_frame_id === '/lidar_03_tf') {
     lidar_3.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     lidar_3.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     // [INVALID] lidar_3.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);

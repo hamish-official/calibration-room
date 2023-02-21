@@ -152,7 +152,7 @@ depth_1_image = depth_2_image = depth_3_image = camera_1_image = lidar_1_image =
 
 const depth_1_image_1 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/depth_1/image_1',
+  name: '/depth_01_image_01',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -162,7 +162,7 @@ depth_1_image_1.subscribe((message) => {
 
 const depth_1_image_2 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/depth_1/image_2',
+  name: '/depth_01_image_01',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -172,7 +172,7 @@ depth_1_image_2.subscribe((message) => {
 
 const depth_2_image_1 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/depth_2/image_1',
+  name: '/depth_02_image_01',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -182,7 +182,7 @@ depth_2_image_1.subscribe((message) => {
 
 const depth_2_image_2 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/depth_2/image_2',
+  name: '/depth_02_image_02',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -192,7 +192,7 @@ depth_2_image_2.subscribe((message) => {
 
 const depth_3_image_1 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/depth_3/image_1',
+  name: '/depth_03_image_01',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -202,7 +202,7 @@ depth_3_image_1.subscribe((message) => {
 
 const depth_3_image_2 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/depth_3/image_2',
+  name: '/depth_03_image_02',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -212,7 +212,7 @@ depth_3_image_2.subscribe((message) => {
 
 const camera_1_image_1 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/camera_1/image_1',
+  name: '/camera_01_image_01',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -222,7 +222,7 @@ camera_1_image_1.subscribe((message) => {
 
 const camera_1_image_2 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/camera_1/image_2',
+  name: '/camera_01_image_02',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -232,7 +232,7 @@ camera_1_image_2.subscribe((message) => {
 
 const lidar_1_image_1 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/lidar_1/image_1',
+  name: '/lidar_01_image_01',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -242,7 +242,7 @@ lidar_1_image_1.subscribe((message) => {
 
 const lidar_1_image_2 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/lidar_1/image_2',
+  name: '/lidar_01_image_02',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -252,7 +252,7 @@ lidar_1_image_2.subscribe((message) => {
 
 const lidar_2_image_1 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/lidar_2/image_1',
+  name: '/lidar_02_image_01',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -262,7 +262,7 @@ lidar_2_image_1.subscribe((message) => {
 
 const lidar_2_image_2 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/lidar_2/image_2',
+  name: '/lidar_02_image_02',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -272,7 +272,7 @@ lidar_2_image_2.subscribe((message) => {
 
 const lidar_3_image_1 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/lidar_3/image_1',
+  name: '/lidar_03_image_01',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
@@ -282,7 +282,7 @@ lidar_3_image_1.subscribe((message) => {
 
 const lidar_3_image_2 = new ROSLIB.Topic({
   ros: props.ros,
-  name: '/lidar_3/image_2',
+  name: '/lidar_03_image_02',
   messageType: 'sensor_msgs/CompressedImage'
 });
 
