@@ -74,16 +74,16 @@
           ros: ros,
           tfClient: tfClient,
           rootObject: viewer.scene,
-          topic: '/camera/depth/points',
-          material: { size: 0.08, color: 0x00ff00 },
+          topic: '/depth_01_world_pointcloud',
+          material: { size: 0.08, color: 0xff0000 },
         });
 
         depth_camera_pointcloud = new ROS3D.PointCloud2({
           ros: ros,
           tfClient: tfClient,
           rootObject: viewer.scene,
-          topic: '/camera/depth_registered/points',
-          material: { size: 0.08, color: 0xff000000 },
+          topic: '/depth_01_camera_pointcloud',
+          material: { size: 0.08, color: 0x00ff00 },
         });
       }
       </script>
