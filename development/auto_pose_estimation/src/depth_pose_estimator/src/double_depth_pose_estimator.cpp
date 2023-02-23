@@ -7,5 +7,7 @@ int main(int argc, char** argv)
 
   DoubleDepthPoseEstimator double_depth_pose_estimator(node_handle);
 
+  ros::spin();
+
   return 0;
 }

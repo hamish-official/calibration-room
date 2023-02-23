@@ -32,15 +32,19 @@ DoubleDepthPoseEstimator::DoubleDepthPoseEstimator(ros::NodeHandle& node_handle)
   camera_martix = cv::Mat(3, 3, CV_64FC1, intrinsic_parameters);
   distortion_coefficients = cv::Mat(4, 1, CV_64FC1, radial_tangential_distortion);
 
-  // [TEST] cv::namedWindow("DEFAULT");
-  // [TEST] cv::namedWindow("FOUND");
+  // [TEST]
+  cv::namedWindow("DEFAULT");
+  // [TEST]
+  cv::namedWindow("FOUND");
 }
 
 // *** 소멸자 함수 *** //
 DoubleDepthPoseEstimator::~DoubleDepthPoseEstimator()
 {
-  // [TEST] cv::destroyWindow("DEFAULT");
-  // [TEST] cv::destroyWindow("FOUND");
+  // [TEST]
+  cv::destroyWindow("DEFAULT");
+  // [TEST]
+  cv::destroyWindow("FOUND");
 }
 
 // *** ArucoMarker를 찾아내는 함수 *** //
@@ -57,7 +61,8 @@ void DoubleDepthPoseEstimator::aruco_marker_detection(cv::Mat& copied_frame)
   if (marker_ids.size() > 0)
   {
     cv::aruco::drawDetectedMarkers(frame, marker_corners, marker_ids);
-    // [TEST] cv::imshow("FOUND", frame);
+    // [TEST]
+    cv::imshow("FOUND", frame);
 
     std::vector<uchar> data;
     sensor_msgs::CompressedImage compressed_image;
@@ -201,26 +206,56 @@ sensor_msgs::PointCloud2 DoubleDepthPoseEstimator::pcl_to_sensor(pcl::PointCloud
 
 void DoubleDepthPoseEstimator::parameter_initializer(ros::NodeHandle& node_handle)
 {
-  // 카메라 방향 설정(left: 1, right: 2)
-  node_handle.getParam("/depth_pose_estimator/DEPTH_DIRECTION", depth_direction);
+  std::cout << ros::this_node::getName() << std::endl;
 
-  // 초당 프레임
-  node_handle.getParam("/depth_pose_estimator/FRAMES_PER_SECONDS", frames_per_seconds);
+  if (ros::this_node::getName() == "/right_depth_pose_estimator")
+  {
+    // 카메라 방향 설정(left: 1, right: 2)
+    depth_direction = 2;
 
-  // aruco marker 관련 변수
-  node_handle.getParam("/depth_pose_estimator/ARUCO_EDGE_SIZE", aruco_edge_size);
-  node_handle.getParam("/depth_pose_estimator/ARUCO_GAP_SIZE", aruco_gap_size);
+    // 초당 프레임
+    node_handle.getParam("/depth_pose_estimator/FRAMES_PER_SECONDS", frames_per_seconds);
 
-  // topic 관련 변수
-  node_handle.getParam("/depth_pose_estimator/DEPTH_COLOR_TOPIC", depth_color_topic);
-  node_handle.getParam("/depth_pose_estimator/DEPTH_REGISTERED_TOPIC", depth_registered_topic);
-  node_handle.getParam("/depth_pose_estimator/DEPTH_TF_TOPIC", depth_tf);
+    // aruco marker 관련 변수
+    node_handle.getParam("/depth_pose_estimator/RIGHT_ARUCO_EDGE_SIZE", aruco_edge_size);
+    node_handle.getParam("/depth_pose_estimator/RIGHT_ARUCO_GAP_SIZE", aruco_gap_size);
 
-  // 이미지 관련 변수
-  node_handle.getParam("/depth_pose_estimator/DEPTH_IMAGE_01_TOPIC", depth_image_01);
-  node_handle.getParam("/depth_pose_estimator/DEPTH_IMAGE_02_TOPIC", depth_image_02);
+    // topic 관련 변수
+    node_handle.getParam("/depth_pose_estimator/RIGHT_DEPTH_COLOR_TOPIC", depth_color_topic);
+    node_handle.getParam("/depth_pose_estimator/RIGHT_DEPTH_REGISTERED_TOPIC", depth_registered_topic);
+    node_handle.getParam("/depth_pose_estimator/RIGHT_DEPTH_TF_TOPIC", depth_tf);
 
-  // 포인트클라우드 관련 변수
-  node_handle.getParam("/depth_pose_estimator/DEPTH_CAMERA_POINTCLOUD_TOPIC", depth_camera_pointcloud_topic);
-  node_handle.getParam("/depth_pose_estimator/DEPTH_WORLD_POINTCLOUD_TOPIC", depth_world_pointcloud_topic);
+    // 이미지 관련 변수
+    node_handle.getParam("/depth_pose_estimator/RIGHT_DEPTH_IMAGE_01_TOPIC", depth_image_01);
+    node_handle.getParam("/depth_pose_estimator/RIGHT_DEPTH_IMAGE_02_TOPIC", depth_image_02);
+
+    // 포인트클라우드 관련 변수
+    node_handle.getParam("/depth_pose_estimator/RIGHT_DEPTH_CAMERA_POINTCLOUD_TOPIC", depth_camera_pointcloud_topic);
+    node_handle.getParam("/depth_pose_estimator/RIGHT_DEPTH_WORLD_POINTCLOUD_TOPIC", depth_world_pointcloud_topic);
+  }
+  else
+  {
+    // 카메라 방향 설정(left: 1, right: 2)
+    depth_direction = 1;
+
+    // 초당 프레임
+    node_handle.getParam("/depth_pose_estimator/FRAMES_PER_SECONDS", frames_per_seconds);
+
+    // aruco marker 관련 변수
+    node_handle.getParam("/depth_pose_estimator/LEFT_ARUCO_EDGE_SIZE", aruco_edge_size);
+    node_handle.getParam("/depth_pose_estimator/LEFT_ARUCO_GAP_SIZE", aruco_gap_size);
+
+    // topic 관련 변수
+    node_handle.getParam("/depth_pose_estimator/LEFT_DEPTH_COLOR_TOPIC", depth_color_topic);
+    node_handle.getParam("/depth_pose_estimator/LEFT_DEPTH_REGISTERED_TOPIC", depth_registered_topic);
+    node_handle.getParam("/depth_pose_estimator/LEFT_DEPTH_TF_TOPIC", depth_tf);
+
+    // 이미지 관련 변수
+    node_handle.getParam("/depth_pose_estimator/LEFT_DEPTH_IMAGE_01_TOPIC", depth_image_01);
+    node_handle.getParam("/depth_pose_estimator/LEFT_DEPTH_IMAGE_02_TOPIC", depth_image_02);
+
+    // 포인트클라우드 관련 변수
+    node_handle.getParam("/depth_pose_estimator/LEFT_DEPTH_CAMERA_POINTCLOUD_TOPIC", depth_camera_pointcloud_topic);
+    node_handle.getParam("/depth_pose_estimator/LEFT_DEPTH_WORLD_POINTCLOUD_TOPIC", depth_world_pointcloud_topic);
+  }
 }

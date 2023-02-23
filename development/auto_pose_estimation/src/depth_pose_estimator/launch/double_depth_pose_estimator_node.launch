@@ -2,22 +2,18 @@
   <rosparam
     ns="depth_pose_estimator"
     command="load"
-    file="$(find depth_pose_estimator)/params/left_depth_pose_estimator_params.yaml"
+    file="$(find depth_pose_estimator)/params/double_depth_pose_estimator_params.yaml"
   />
+
   <node
-    name="double_depth_pose_estimator"
+    name="left_depth_pose_estimator"
     pkg="depth_pose_estimator"
     type="double_depth_pose_estimator"
     output="screen"
   />
 
-  <rosparam
-    ns="depth_pose_estimator"
-    command="load"
-    file="$(find depth_pose_estimator)/params/right_depth_pose_estimator_params.yaml"
-  />
   <node
-    name="double_depth_pose_estimator"
+    name="right_depth_pose_estimator"
     pkg="depth_pose_estimator"
     type="double_depth_pose_estimator"
     output="screen"
