@@ -52,10 +52,9 @@ private:
   std::vector<int> marker_ids;
   std::vector<std::vector<cv::Point2f>> marker_corners;
   cv::aruco::DetectorParameters detector_parameters;
-  const cv::Ptr<cv::aruco::Dictionary> dictionary;
+  cv::Ptr<cv::aruco::Dictionary> dictionary;
   
   double aruco_edge_size, aruco_gap_size;
-
 
   image_transport::Subscriber image_subscriber;
   ros::Subscriber depth_subscriber;
@@ -81,15 +80,15 @@ private:
 
 public:
   // *** Constructor && Destrcutor *** //
-  DoubleDepthPoseEstimator(ros::NodeHandle node_handle);
+  DoubleDepthPoseEstimator(ros::NodeHandle& node_handle);
   ~DoubleDepthPoseEstimator();
 
   // *** callbacks *** //
   void image_callback(const sensor_msgs::Image::ConstPtr& image_messages);
-  void depth_callback(const sensor_msgs::PointCloud2:::ConstPtr& depth_messages);
+  void depth_callback(const sensor_msgs::PointCloud2::ConstPtr& depth_messages);
 
   // *** core methods *** //
-  void aruco_marker_detection(cv::Mat* copied_frame);
+  void aruco_marker_detection(cv::Mat& copied_frame);
   std::tuple<Eigen::Matrix3f, Eigen::Vector3f> rigid_transformation(std::vector<cv::Point3f> corner_information_vector);
 
   // *** other methods *** //
@@ -98,6 +97,6 @@ public:
   pcl::PointCloud<pcl::PointXYZ> sensor_to_pcl(sensor_msgs::PointCloud2 sensor_messages);
   sensor_msgs::PointCloud2 pcl_to_sensor(pcl::PointCloud<pcl::PointXYZ> pcl_messages);
   void parameter_initializer(ros::NodeHandle& node_handle);
-}
+};
 
 #endif

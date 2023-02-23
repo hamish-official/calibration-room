@@ -6,8 +6,8 @@ DoubleDepthPoseEstimator::DoubleDepthPoseEstimator(ros::NodeHandle& node_handle)
   parameter_initializer(node_handle);
 
   // subscriber
-  image_subscriber = image_transport::ImageTransport(node_handle).subscribe(depth_color_topic, 1, &DepthPoseEstimator::image_callback, this);
-  depth_subscriber = node_handle.subscribe(depth_registered_topic, 1, &DepthPoseEstimator::depth_callback, this);
+  image_subscriber = image_transport::ImageTransport(node_handle).subscribe(depth_color_topic, 1, &DoubleDepthPoseEstimator::image_callback, this);
+  depth_subscriber = node_handle.subscribe(depth_registered_topic, 1, &DoubleDepthPoseEstimator::depth_callback, this);
 
   // publisher
   world_corners_publisher = node_handle.advertise<sensor_msgs::PointCloud2>(depth_world_pointcloud_topic, 1);
@@ -70,7 +70,7 @@ void DoubleDepthPoseEstimator::aruco_marker_detection(cv::Mat& copied_frame)
 }
 
 // *** rigid_transformation 함수 *** //
-std::tuple<Eigen::Matrix3f, Eigen::Vector3f> DepthPoseEstimator::rigid_transformation(std::vector<cv::Point3f> corner_information_vector)
+std::tuple<Eigen::Matrix3f, Eigen::Vector3f> DoubleDepthPoseEstimator::rigid_transformation(std::vector<cv::Point3f> corner_information_vector)
 {
   Eigen::Matrix<float, 3, Eigen::Dynamic> camera_coordinate_points, world_coordinate_points;
   Eigen::Matrix<float, 3, Eigen::Dynamic> camera_substract_mean, world_substract_mean;
@@ -126,24 +126,24 @@ std::tuple<Eigen::Matrix3f, Eigen::Vector3f> DepthPoseEstimator::rigid_transform
 }
 
 // *** 체크보드의 월드좌표계를 저장하는 함수 *** //
-void DepthPoseEstimator::create_world_coordinate_system()
+void DoubleDepthPoseEstimator::create_world_coordinate_system()
 {
   object_points.clear();
 
-  for (int i = 0; i < chessboard_dimensions.height; i++)
-  {
-    for (int j = 0; j < chessboard_dimensions.width; j++)
-    {
-      cv::Point3f corner(1.36f, 0.35f - j * (chessboard_edge_size), 0.6f - i * (chessboard_edge_size));
-      pcl::PointXYZ corner_point(corner.x, corner.y, corner.z);
-      object_points.push_back(corner);
-      world_corners_messages.push_back(corner_point);
-    }
-  }
+  // for (int i = 0; i < chessboard_dimensions.height; i++)
+  // {
+  //   for (int j = 0; j < chessboard_dimensions.width; j++)
+  //   {
+  //     cv::Point3f corner(1.36f, 0.35f - j * (chessboard_edge_size), 0.6f - i * (chessboard_edge_size));
+  //     pcl::PointXYZ corner_point(corner.x, corner.y, corner.z);
+  //     object_points.push_back(corner);
+  //     world_corners_messages.push_back(corner_point);
+  //   }
+  // }
 }
 
 // *** 인코딩 방식을 상수화하는 함수 *** //
-int DepthPoseEstimator::encoding_mat_type(const std::string & encoding)
+int DoubleDepthPoseEstimator::encoding_mat_type(const std::string & encoding)
 {
   if (encoding == "mono8")
   {
@@ -183,7 +183,7 @@ int DepthPoseEstimator::encoding_mat_type(const std::string & encoding)
 }
 
 // *** sensor_msgs::PointCloud2에서 pcl::PointCloud<pcl::PointXYZ>로 변환하는 함수 *** //
-pcl::PointCloud<pcl::PointXYZ> DepthPoseEstimator::sensor_to_pcl(sensor_msgs::PointCloud2 sensor_messages)
+pcl::PointCloud<pcl::PointXYZ> DoubleDepthPoseEstimator::sensor_to_pcl(sensor_msgs::PointCloud2 sensor_messages)
 {
   pcl::PointCloud<pcl::PointXYZ> pcl_messages;
   pcl::fromROSMsg(sensor_messages, pcl_messages);
@@ -191,7 +191,7 @@ pcl::PointCloud<pcl::PointXYZ> DepthPoseEstimator::sensor_to_pcl(sensor_msgs::Po
 }
 
 // *** pcl::PointCloud<pcl::PointXYZ>에서 sensor_msgs::PointCloud2로 변환하는 함수 *** //
-sensor_msgs::PointCloud2 DepthPoseEstimator::pcl_to_sensor(pcl::PointCloud<pcl::PointXYZ> pcl_messages)
+sensor_msgs::PointCloud2 DoubleDepthPoseEstimator::pcl_to_sensor(pcl::PointCloud<pcl::PointXYZ> pcl_messages)
 {
   sensor_msgs::PointCloud2 sensor_messages;
   pcl::toROSMsg(pcl_messages, sensor_messages);
@@ -199,7 +199,7 @@ sensor_msgs::PointCloud2 DepthPoseEstimator::pcl_to_sensor(pcl::PointCloud<pcl::
   return sensor_messages;
 }
 
-void DepthPoseEstimator::parameter_initializer(ros::NodeHandle& node_handle)
+void DoubleDepthPoseEstimator::parameter_initializer(ros::NodeHandle& node_handle)
 {
   // 카메라 방향 설정(left: 1, right: 2)
   node_handle.getParam("/depth_pose_estimator/DEPTH_DIRECTION", depth_direction);
