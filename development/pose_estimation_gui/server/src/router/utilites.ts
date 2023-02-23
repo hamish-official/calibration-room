@@ -7,12 +7,11 @@ const router = Router();
 
 router.post('/store', async (request: Request, response: Response) => {
   const {
-    depth_x, depth_y, depth_z, depth_roll, depth_pitch, depth_yaw,
-    front_lidar_x, front_lidar_y, front_lidar_z,
-    front_lidar_roll, front_lidar_pitch, front_lidar_yaw,
-    rear_lidar_x, rear_lidar_y, rear_lidar_z,
-    rear_lidar_roll, rear_lidar_pitch, rear_lidar_yaw,
-    camera_x, camera_y, camera_z, camera_roll, camera_pitch, camera_yaw
+    depth_1_x, depth_1_y, depth_1_z, depth_1_roll, depth_1_pitch, depth_1_yaw,
+    depth_2_x, depth_2_y, depth_2_z, depth_2_roll, depth_2_pitch, depth_2_yaw,
+    lidar_1_x, lidar_1_y, lidar_1_z, lidar_1_roll, lidar_1_pitch, lidar_1_yaw,
+    lidar_2_x, lidar_2_y, lidar_2_z, lidar_2_roll, lidar_2_pitch, lidar_2_yaw,
+    camera_1_x, camera_1_y, camera_1_z, camera_1_roll, camera_1_pitch, camera_1_yaw
   } = request.body;
 
   const urdf =
@@ -28,13 +27,13 @@ router.post('/store', async (request: Request, response: Response) => {
     + `\t<joint name="robot2laser1" type="fixed">\n`
 		+ `\t\t<parent link="base_link"/>\n`
     + `\t\t<child link="laser1"/>\n`
-    + `\t\t<origin xyz="${front_lidar_x} ${front_lidar_y} ${front_lidar_z}" rpy="${front_lidar_roll} ${front_lidar_pitch} ${front_lidar_yaw}" />\n`
+    + `\t\t<origin xyz="${lidar_1_x} ${lidar_1_y} ${lidar_1_z}" rpy="${lidar_1_roll} ${lidar_1_pitch} ${lidar_1_yaw}" />\n`
     + `\t</joint>\n`
     + `\n`
     + `\t<joint name="robot2laser2" type="fixed">\n`
     + `\t\t<parent link="base_link"/>\n`
     + `\t\t<child link="laser2"/>\n`
-    + `\t\t<origin xyz="${rear_lidar_x} ${rear_lidar_y} ${rear_lidar_z}" rpy="${rear_lidar_roll} ${rear_lidar_pitch} ${rear_lidar_yaw}" />\n`
+    + `\t\t<origin xyz="${lidar_2_x} ${lidar_2_y} ${lidar_2_z}" rpy="${lidar_2_roll} ${lidar_2_pitch} ${lidar_2_yaw}" />\n`
     + `\t</joint>\n`
     + `\n`
     + `\t<joint name="robot2laser3" type="fixed">\n`
@@ -52,7 +51,7 @@ router.post('/store', async (request: Request, response: Response) => {
     + `\t<joint name="robot2depth" type="fixed">\n`
     + `\t\t<parent link="base_link"/>\n`
     + `\t\t<child link="camera_link"/>\n`
-    + `\t\t<origin xyz="${depth_x} ${depth_y} ${depth_z}" rpy="${depth_roll} ${depth_pitch} ${depth_yaw}" />\n`
+    + `\t\t<origin xyz="${depth_1_x} ${depth_1_y} ${depth_1_z}" rpy="${depth_1_roll} ${depth_1_pitch} ${depth_1_yaw}" />\n`
     + `\t</joint>\n`
     + `\n`
     + `</robot>`;

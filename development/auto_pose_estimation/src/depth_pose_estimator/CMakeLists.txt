@@ -39,3 +39,6 @@ include
 
 add_executable(depth_pose_estimator src/depth_pose_estimator.cpp src/DepthPoseEstimator.cpp src/DepthPoseEstimatorCallbacks.cpp)
 target_link_libraries(depth_pose_estimator ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES})
+
+add_executable(double_depth_pose_estimator src/double_depth_pose_estimator.cpp src/DoubleDepthPoseEstimator.cpp src/DoubleDepthPoseEstimatorCallbacks.cpp)
+target_link_libraries((double_depth_pose_estimator ${catkin_LIBRARIES} ${PCL_LIBRARIES} ${OpenCV_LIBRARIES}))

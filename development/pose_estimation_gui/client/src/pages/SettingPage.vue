@@ -30,19 +30,14 @@
       <div class="btn-group btn-group" data-toggle="buttons">
         <label class="btn active">
           <input type="checkbox" :checked="store.state.depth1_activate" @click="() => {store.state.depth1_activate = !(store.state.depth1_activate)}">
-          <i class="fa fa-square-o fa-2x"></i><i class="fa fa-check-square-o fa-2x"></i><span> "/depth1"</span>
+          <i class="fa fa-square-o fa-2x"></i><i class="fa fa-check-square-o fa-2x"></i>
+          <span> "/depth1"</span>
         </label>
         <label class="btn">
           <input type="checkbox" :checked="store.state.depth2_activate" @click="() => {store.state.depth2_activate = !(store.state.depth2_activate)}">
           <i class="fa fa-square-o fa-2x"></i>
           <i class="fa fa-check-square-o fa-2x"></i>
           <span> "/depth2"</span>
-        </label>
-        <label class="btn">
-          <input type="checkbox" :checked="store.state.depth3_activate" @click="() => {store.state.depth3_activate = !(store.state.depth3_activate)}">
-          <i class="fa fa-square-o fa-2x"></i>
-          <i class="fa fa-check-square-o fa-2x"></i>
-          <span> "/depth3"</span>
         </label>
       </div>
 
@@ -62,12 +57,6 @@
           <i class="fa fa-check-square-o fa-2x"></i>
           <span> "/scan2"</span>
         </label>
-        <label class="btn">
-          <input type="checkbox" :checked="store.state.lidar3_activate" @click="() => {store.state.lidar3_activate = !(store.state.lidar3_activate)}">
-          <i class="fa fa-square-o fa-2x"></i>
-          <i class="fa fa-check-square-o fa-2x"></i>
-          <span> "/scan3"</span>
-        </label>
       </div>
 
       <br/>
@@ -80,7 +69,6 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
 import axios from 'axios';
 import { useStore } from 'vuex';
 
@@ -99,10 +87,8 @@ const cr_settings_json = async () => {
   store.state.camera1_activate = data.camera1_activate;
   store.state.depth1_activate = data.depth1_activate;
   store.state.depth2_activate = data.depth2_activate;
-  store.state.depth3_activate = data.depth3_activate;
   store.state.lidar1_activate = data.lidar1_activate;
   store.state.lidar2_activate = data.lidar2_activate;
-  store.state.lidar3_activate = data.lidar3_activate;
 };
 
 cr_settings_json();
@@ -112,19 +98,15 @@ const default_settings = async () => {
   store.state.camera1_activate = true;
   store.state.depth1_activate = true;
   store.state.depth2_activate = false;
-  store.state.depth3_activate = false;
   store.state.lidar1_activate = true;
   store.state.lidar2_activate = true;
-  store.state.lidar3_activate = false;
 
   const settings_json = {
     "camera1_activate": store.state.camera1_activate,
     "depth1_activate": store.state.depth1_activate,
     "depth2_activate": store.state.depth2_activate,
-    "depth3_activate": store.state.depth3_activate,
     "lidar1_activate": store.state.lidar1_activate,
     "lidar2_activate": store.state.lidar2_activate,
-    "lidar3_activate": store.state.lidar3_activate
   };
 
   try {
@@ -148,10 +130,8 @@ const customized_settings = async () => {
     "camera1_activate": store.state.camera1_activate,
     "depth1_activate": store.state.depth1_activate,
     "depth2_activate": store.state.depth2_activate,
-    "depth3_activate": store.state.depth3_activate,
     "lidar1_activate": store.state.lidar1_activate,
     "lidar2_activate": store.state.lidar2_activate,
-    "lidar3_activate": store.state.lidar3_activate
   };
 
   try {

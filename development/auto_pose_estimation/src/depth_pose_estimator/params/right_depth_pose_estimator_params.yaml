@@ -1,0 +1,14 @@
+DEPTH_DIRECTION: 2  # left: 1, right: 2
+DEPTH_COLOR_TOPIC: /depth_02/color/image_raw
+DEPTH_REGISTERED_TOPIC: /depth_02/depth_registered/points
+
+DEPTH_IMAGE_01_TOPIC: /depth_02_image_01
+DEPTH_IMAGE_02_TOPIC: /depth_02_image_02
+
+DEPTH_CAMERA_POINTCLOUD_TOPIC: /depth_02_camera_pointcloud
+DEPTH_WORLD_POINTCLOUD_TOPIC: /depth_02_world_pointcloud
+
+DEPTH_TF_TOPIC: depth_02_tf
+
+# 카메라 프레임에 대한 파라미터
+FRAMES_PER_SECONDS: 10

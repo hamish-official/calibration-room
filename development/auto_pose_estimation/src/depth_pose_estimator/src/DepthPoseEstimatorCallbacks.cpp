@@ -30,7 +30,7 @@ void DepthPoseEstimator::image_callback(const sensor_msgs::Image::ConstPtr& imag
   compressed_image.data = data;
   compressed_image_publisher_1.publish(compressed_image);
 
-  cv::imshow("DEFAULT", copied_frame);
+  // [TEST] cv::imshow("DEFAULT", copied_frame);
 
   chessboard_detection(copied_frame);
 
@@ -66,7 +66,7 @@ void DepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::ConstPtr
     chessboard_information_vector.push_back(_corner);
     camera_corners_messages.push_back(_corner_point_xyz);
 
-    std::cout << _corner.x << " " << _corner.y << " " << _corner.z << std::endl;
+    // [TEST] std::cout << _corner.x << " " << _corner.y << " " << _corner.z << std::endl;
   }
 
   std::tuple<Eigen::Matrix3f, Eigen::Vector3f> Rt = rigid_transformation(chessboard_information_vector);  // [CORE METHOD]
@@ -90,8 +90,8 @@ void DepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::ConstPtr
 
   if (!(std::isnan(x) + std::isnan(y) + std::isnan(z)))
   {
-    std::cout <<"x, y, z >>> " << x << ", " << y << ", " << z << std::endl;
-    std::cout <<"roll, pitch, yaw >>> " << roll << ", " << pitch << ", " << yaw << std::endl;
+    // [TEST] std::cout <<"x, y, z >>> " << x << ", " << y << ", " << z << std::endl;
+    // [TEST] std::cout <<"roll, pitch, yaw >>> " << roll << ", " << pitch << ", " << yaw << std::endl;
     
     static tf::TransformBroadcaster tf_broadcaster;
     tf::Transform tf_transform;

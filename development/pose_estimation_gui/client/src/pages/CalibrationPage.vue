@@ -1,405 +1,96 @@
 <template>
   <div class="mt-5">
     <div class="row mb-3 d-flex justify-content-center">
-      <button type="button" class="col-2 btn btn-primary v-mar"  @click="store_pose"><strong>STORE<br/>POSE</strong></button>&nbsp;&nbsp;
-      <button type="button" class="col-2 btn btn-dark v-mar" @click="all_lidar_reference"><strong>ALL LIDAR<br/>REFERENCE</strong></button>&nbsp;&nbsp;
-      <button type="button" class="col-2 btn btn-dark v-mar" @click="lidar_1_current"><strong>LIDAR 1<br/>CURRENT</strong></button>&nbsp;&nbsp;
-      <button type="button" class="col-2 btn btn-dark v-mar" @click="lidar_2_current"><strong>LIDAR 2<br/>CURRENT</strong></button>&nbsp;&nbsp;
-      <button type="button" class="col-2 btn btn-dark v-mar" @click="lidar_3_current"><strong>LIDAR 3<br/>CURRENT</strong></button>
+      <button type="button" class="col-2 mx-1 btn btn-primary v-mar"  style="width: 12em; height: 4em;" @click="()=>mode=1"><strong>6-DOF DATA</strong></button>
+      <button type="button" class="col-2 mx-1 btn btn-primary v-mar" style="width: 12em; height: 4em;" @click="()=>mode=2"><strong>SENSOR IMAGE</strong></button>
+      <button type="button" class="col-2 mx-1 btn btn-dark v-mar" style="width: 12em; height: 4em;" @click="all_lidar_reference"><strong>ALL LIDAR<br/>REFERENCE</strong></button>
+      <button type="button" class="col-2 mx-1 btn btn-dark v-mar" style="width: 12em; height: 4em;" @click="lidar_1_current"><strong>LIDAR 1<br/>CURRENT</strong></button>
+      <button type="button" class="col-2 mx-1 btn btn-dark v-mar" style="width: 12em; height: 4em;" @click="lidar_2_current"><strong>LIDAR 2<br/>CURRENT</strong></button>
     </div>
 
-    <div class="row mt-5 mb-3">
-      <div class="col-md-12">
-        <h2>6-DOF Data</h2>
+    <div v-if="mode == 1" class="row mb-3 d-flex justify-content-center">
+      <div class="row mt-4 mb-3">
+        <div class="col-md-12">
+          <h2>6-DOF Data</h2>
+        </div>
       </div>
-    </div>
-
-    <div class="row d-flex justify-content-center">
-      <div class="col-md-3">
-        <div class="bordered">
-          <div class="row">
-            <div class="col-md-12">
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-4">
+          <div class="bordered mb-2">
+            <div class="row">
               <h3 class="no-top">Depth 1</h3>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">x</label>
-                <input type="text" class="form-control" id="" :value="depth_1.x.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">y</label>
-                <input type="text" class="form-control" id="" :value="depth_1.y.value">
-              </div>
+            <div class="row">
+              <DofComponent :sensor="depth_1" />
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">z</label>
-                <input type="text" class="form-control" id="" :value="depth_1.z.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">roll</label>
-                <input type="text" class="form-control" id="" :value="depth_1.roll.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">pitch</label>
-                <input type="text" class="form-control" id="" :value="depth_1.pitch.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">yaw</label>
-                <input type="text" class="form-control" id="" :value="depth_1.yaw.value">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="bordered">
-          <div class="row">
-            <div class="col-md-12">
+          <div class="bordered mb-2">
+            <div class="row">
               <h3 class="no-top">Depth 2</h3>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">x</label>
-                <input type="text" class="form-control" id="" :value="depth_2.x.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">y</label>
-                <input type="text" class="form-control" id="" :value="depth_2.y.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">z</label>
-                <input type="text" class="form-control" id="" :value="depth_2.z.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">roll</label>
-                <input type="text" class="form-control" id="" :value="depth_2.roll.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">pitch</label>
-                <input type="text" class="form-control" id="" :value="depth_2.pitch.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">yaw</label>
-                <input type="text" class="form-control" id="" :value="depth_2.yaw.value">
-              </div>
+            <div class="row">
+              <DofComponent :sensor="depth_2" />
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-md-3">
-        <div class="bordered">
-          <div class="row">
-            <div class="col-md-12">
-              <h3 class="no-top">Depth 3</h3>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">x</label>
-                <input type="text" class="form-control" id="" :value="depth_3.x.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">y</label>
-                <input type="text" class="form-control" id="" :value="depth_3.y.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">z</label>
-                <input type="text" class="form-control" id="" :value="depth_3.z.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">roll</label>
-                <input type="text" class="form-control" id="" :value="depth_3.roll.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">pitch</label>
-                <input type="text" class="form-control" id="" :value="depth_3.pitch.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">yaw</label>
-                <input type="text" class="form-control" id="" :value="depth_3.yaw.value">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="bordered">
-          <div class="row">
-            <div class="col-md-12">
-              <h3 class="no-top">Camera 1</h3>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">x</label>
-                <input type="text" class="form-control" id="" :value="camera_1.x.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">y</label>
-                <input type="text" class="form-control" id="" :value="camera_1.y.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">z</label>
-                <input type="text" class="form-control" id="" :value="camera_1.z.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">roll</label>
-                <input type="text" class="form-control" id="" :value="camera_1.roll.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">pitch</label>
-                <input type="text" class="form-control" id="" :value="camera_1.pitch.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">yaw</label>
-                <input type="text" class="form-control" id="" :value="camera_1.yaw.value">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="row m-2"></div>
-    <div class="row d-flex justify-content-center">
-      <div class="col-md-3">
-        <div class="bordered">
-          <div class="row">
-            <div class="col-md-12">
+        <div class="col-md-4">
+          <div class="bordered mb-2">
+            <div class="row">
               <h3 class="no-top">Lidar 1</h3>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">x</label>
-                <input type="text" class="form-control" id="" :value="lidar_1.x.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">y</label>
-                <input type="text" class="form-control" id="" :value="lidar_1.y.value">
-              </div>
+            <div class="row">
+              <DofComponent :sensor="lidar_1" />
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">z</label>
-                <input type="text" class="form-control" id="" :value="lidar_1.z.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">roll</label>
-                <input type="text" class="form-control" id="" :value="lidar_1.roll.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">pitch</label>
-                <input type="text" class="form-control" id="" :value="lidar_1.pitch.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">yaw</label>
-                <input type="text" class="form-control" id="" :value="lidar_1.yaw.value">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <div class="bordered">
-          <div class="row">
-            <div class="col-md-12">
+          <div class="bordered mb-2">
+            <div class="row">
               <h3 class="no-top">Lidar 2</h3>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">x</label>
-                <input type="text" class="form-control" id="" :value="lidar_2.x.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">y</label>
-                <input type="text" class="form-control" id="" :value="lidar_2.y.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">z</label>
-                <input type="text" class="form-control" id="" :value="lidar_2.z.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">roll</label>
-                <input type="text" class="form-control" id="" :value="lidar_2.roll.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">pitch</label>
-                <input type="text" class="form-control" id="" :value="lidar_2.pitch.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">yaw</label>
-                <input type="text" class="form-control" id="" :value="lidar_2.yaw.value">
-              </div>
+            <div class="row">
+              <DofComponent :sensor="lidar_2" />
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-md-3">
-        <div class="bordered">
-          <div class="row">
-            <div class="col-md-12">
-              <h3 class="no-top">Lidar 3</h3>
+        <div class="col-md-4">
+          <div class="bordered mb-2">
+            <div class="row">
+              <h3 class="no-top">Camera 1</h3>
+            </div>
+            <div class="row">
+              <DofComponent :sensor="camera_1" />
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">x</label>
-                <input type="text" class="form-control" id="" :value="lidar_3.x.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">y</label>
-                <input type="text" class="form-control" id="" :value="lidar_3.y.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">z</label>
-                <input type="text" class="form-control" id="" :value="lidar_3.z.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">roll</label>
-                <input type="text" class="form-control" id="" :value="lidar_3.roll.value">
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">pitch</label>
-                <input type="text" class="form-control" id="" :value="lidar_3.pitch.value">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="">yaw</label>
-                <input type="text" class="form-control" id="" :value="lidar_3.yaw.value">
-              </div>
-            </div>
+          <div class="bordered mb-2">
+            <button class="btn btn-secondary" style="width: 100%; height: 14.1em;" @click="store_pose">
+              <span><h5>URDF 파일로 추출하기</h5></span>
+            </button>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="row m-2"></div>
-
-    <div class="row mt-5">
-      <div class="col-md-12">
-        <h2>Sensor Data</h2>
+    
+    <div v-else-if="mode == 2" class="row mb-3 d-flex justify-content-center">
+      <div class="row mt-5">
+        <div class="col-md-12">
+          <h2>Sensor Data</h2>
+        </div>
       </div>
+      
+      <CarouselComponent :ros="ros" :sensors="sensors" />
     </div>
-
-    <CarouselComponent :ros="ros" />
   </div>
 </template>
 
 <script setup>
 import CarouselComponent from '../components/CarouselComponent.vue';
+import DofComponent from '../components/DofComponent.vue';
 import { ref } from 'vue';
 import ROSLIB from 'roslib';
 import axios from 'axios';
+
+const mode = ref(1);
 
 // *** ros *** //
 const ros = new ROSLIB.Ros({
@@ -422,10 +113,10 @@ ros.on('close', () => {
 const camera_1 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
 const depth_1 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
 const depth_2 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
-const depth_3 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
 const lidar_1 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
 const lidar_2 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
-const lidar_3 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
+
+const sensors = [depth_1, depth_2, lidar_1, lidar_2, camera_1];
 
 // *** axios *** //
 const store_pose = async () => {
@@ -445,12 +136,6 @@ const store_pose = async () => {
       depth_2_roll : depth_2.roll.value,
       depth_2_pitch : depth_2.pitch.value,
       depth_2_yaw : depth_2.yaw.value,
-      depth_3_x : depth_3.x.value,
-      depth_3_y : depth_3.y.value,
-      depth_3_z : depth_3.z.value,
-      depth_3_roll : depth_3.roll.value,
-      depth_3_pitch : depth_3.pitch.value,
-      depth_3_yaw : depth_3.yaw.value,
       lidar_1_x : lidar_1.x.value,
       lidar_1_y : lidar_1.y.value,
       lidar_1_z : lidar_1.z.value,
@@ -463,12 +148,6 @@ const store_pose = async () => {
       lidar_2_roll : lidar_2.roll.value,
       lidar_2_pitch : lidar_2.pitch.value,
       lidar_2_yaw : lidar_2.yaw.value,
-      lidar_3_x : lidar_3.x.value,
-      lidar_3_y : lidar_3.y.value,
-      lidar_3_z : lidar_3.z.value,
-      lidar_3_roll : lidar_3.roll.value,
-      lidar_3_pitch : lidar_3.pitch.value,
-      lidar_3_yaw : lidar_3.yaw.value,
       camera_1_x : camera_1.x.value,
       camera_1_y : camera_1.y.value,
       camera_1_z : camera_1.z.value,
@@ -515,6 +194,32 @@ const lidar_3_current = async () => {
   });
 };
 
+const quaternion2euler = (sensor, message)=>{
+  sensor.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
+  sensor.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
+  sensor.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
+
+  let qx, qy, qz, qw;
+  qx = message.transforms[0].transform.rotation.x;
+  qy = message.transforms[0].transform.rotation.y;
+  qz = message.transforms[0].transform.rotation.z;
+  qw = message.transforms[0].transform.rotation.w;
+
+  let t0, t1, t2, t3, t4;
+
+  t0 = 2.0 * (qw*qx + qy*qz);
+  t1 = 1.0 - 2.0 * (qx*qx + qy*qy);
+  t2 = 2.0 * (qw*qy - qz*qx);
+  if (t2 > 1.0) t2 = 1.0;
+  if (t2 < -1.0) t2 = -1.0;
+  t3 = 2.0 * (qw*qz + qx*qy);
+  t4 = 1.0 - 2.0 * (qy*qy + qz*qz);
+
+  sensor.roll.value = Math.atan2(t0, t1).toString().substring(0, 6);
+  sensor.pitch.value = Math.asin(t2).toString().substring(0, 6);
+  sensor.yaw.value = Math.atan2(t3, t4).toString().substring(0, 6);
+}
+
 const tf_listener = new ROSLIB.Topic({
   ros: ros,
   name: '/tf',
@@ -523,36 +228,13 @@ const tf_listener = new ROSLIB.Topic({
 
 tf_listener.subscribe((message) => {
   if (message.transforms[0].child_frame_id === '/camera_01_tf') {
-    camera_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
-    camera_1.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
-    camera_1.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
-    camera_1.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
-    camera_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
-    camera_1.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
+    quaternion2euler(camera_1, message)
   }
   if (message.transforms[0].child_frame_id === 'depth_01_tf') {
-    depth_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
-    depth_1.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
-    depth_1.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
-    depth_1.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
-    depth_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
-    depth_1.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
+    quaternion2euler(depth_1, message);
   }
   if (message.transforms[0].child_frame_id === 'depth_02_tf') {
-    depth_2.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
-    depth_2.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
-    depth_2.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
-    depth_2.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
-    depth_2.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
-    depth_2.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
-  }
-  if (message.transforms[0].child_frame_id === 'depth_03_tf') {
-    depth_3.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
-    depth_3.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
-    depth_3.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
-    depth_3.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
-    depth_3.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
-    depth_3.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
+    quaternion2euler(depth_2, message);
   }
   if (message.transforms[0].child_frame_id === '/lidar_01_tf') {
     lidar_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
@@ -569,14 +251,6 @@ tf_listener.subscribe((message) => {
     // [INVALID] lidar_2.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
     // [INVALID] lidar_2.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     lidar_2.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
-  }
-  if (message.transforms[0].child_frame_id === '/lidar_03_tf') {
-    lidar_3.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
-    lidar_3.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
-    // [INVALID] lidar_3.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
-    // [INVALID] lidar_3.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
-    // [INVALID] lidar_3.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
-    lidar_3.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
 });
 </script>

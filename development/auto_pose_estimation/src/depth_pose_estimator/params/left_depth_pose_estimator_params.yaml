@@ -1,0 +1,18 @@
+DEPTH_DIRECTION: 1  # left: 1, right: 2
+DEPTH_COLOR_TOPIC: /depth_01/color/image_raw
+DEPTH_REGISTERED_TOPIC: /depth_01/depth_registered/points
+
+# 단위: meter
+ARUCO_EDGE_SIZE: 0.12
+ARUCO_GAP_SIZE: 0.08
+
+DEPTH_IMAGE_01_TOPIC: /depth_01_image_01
+DEPTH_IMAGE_02_TOPIC: /depth_01_image_02
+
+DEPTH_CAMERA_POINTCLOUD_TOPIC: /depth_01_camera_pointcloud
+DEPTH_WORLD_POINTCLOUD_TOPIC: /depth_01_world_pointcloud
+
+DEPTH_TF_TOPIC: depth_01_tf
+
+# 카메라 프레임에 대한 파라미터
+FRAMES_PER_SECONDS: 10

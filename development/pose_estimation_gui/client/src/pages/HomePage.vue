@@ -4,33 +4,35 @@
 			<div class="margin-bottom-basic mb-4">
 				<h5>센서의 6-DOF 값을 계산하여 URDF 로 생성합니다.</h5>
 				<span style="color:grey;">
-          작동 상태:
+          작동 상태는 '
           <span v-if="connection" style="color: green">{{ connection_text }}</span>
           <span v-else style="color: red">{{ connection_text }}</span>
-          <br/>
-          연결된 아이피: {{ ip }}
+          '이며, 연결된 아이피는
+          {{ (ip) ? ip + ' 입니다.' : '없습니다.' }}
         </span>
 			</div>
     </div>
-    <button type="button" class="btn btn-lg btn-success m-2" style="width: 5em" @click="launch_on">
-      LAUNCH ON
-    </button>
-    <button type="button" class="btn btn-lg btn-danger m-2" style="width: 5em" @click="launch_off">
-      LAUNCH OFF
-    </button>
 
-    <br/>
-
-    <router-link to="/calibration" type="button" class="btn btn-lg btn-info m-2" style="width: 5em">
-      SHOW RESULT
+    <button type="button" class="btn btn-lg btn-success m-2" style="width: 5em; height: 10em;" @click="launch_on">
+      <b>LAUNCH ON</b>
+    </button>
+    <button type="button" class="btn btn-lg btn-danger m-2" style="width: 5em; height: 10em;" @click="launch_off">
+      <b>LAUNCH OFF</b>
+    </button>
+    <router-link to="/calibration">
+      <button type="button" class="btn btn-lg btn-info m-2" style="width: 5em; height: 10em;">
+        <b>SHOW RESULT</b>
+      </button>
     </router-link>
-    <a href="/webviz.html" class="btn btn-lg btn-warning m-2" style="width: 5em">
-      WEBVIZ
+    <a href="/webviz.html">
+      <button type="button" class="btn btn-lg btn-warning m-2" style="width: 5em; height: 10em;">
+        <b>WEBVIZ</b>
+      </button>
     </a>
-    <br/>
+    
     <div class="mt-3">
-      프로그램에 대한 상세 코드는
-      <a target=”_blank” href="https://github.com/hamish-official/calibration-room.git">여기</a>에서 확인 가능합니다.<br/>
+      (* 프로그램에 대한 상세 코드는
+      <a target=”_blank” href="https://github.com/hamish-official/calibration-room.git">여기</a>에서 확인 가능합니다.)<br/>
     </div>
   </div>
 </template>

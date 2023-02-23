@@ -1,7 +1,7 @@
-#include "depth_pose_estimator/DepthPoseEstimator.hpp"
+#include "depth_pose_estimator/DoubleDepthPoseEstimator.hpp"
 
 // *** 생성자 함수 *** //
-DepthPoseEstimator::DepthPoseEstimator(ros::NodeHandle& node_handle)
+DoubleDepthPoseEstimator::DoubleDepthPoseEstimator(ros::NodeHandle& node_handle)
 {
   parameter_initializer(node_handle);
 
@@ -12,11 +12,13 @@ DepthPoseEstimator::DepthPoseEstimator(ros::NodeHandle& node_handle)
   // publisher
   world_corners_publisher = node_handle.advertise<sensor_msgs::PointCloud2>(depth_world_pointcloud_topic, 1);
   camera_corners_publisher = node_handle.advertise<sensor_msgs::PointCloud2>(depth_camera_pointcloud_topic, 1);
-  // [CANDIDATE] verification_publisher = node_handle.advertise<sensor_msgs::PointCloud2>("depth_verification_messages", 1);
 
   // image_publisher
   compressed_image_publisher_1 = node_handle.advertise<sensor_msgs::CompressedImage>(depth_image_01, 1);
   compressed_image_publisher_2 = node_handle.advertise<sensor_msgs::CompressedImage>(depth_image_02, 1);
+
+  detector_parameters = cv::aruco::DetectorParameters();
+  dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
 
   create_world_coordinate_system();
 
@@ -35,31 +37,26 @@ DepthPoseEstimator::DepthPoseEstimator(ros::NodeHandle& node_handle)
 }
 
 // *** 소멸자 함수 *** //
-DepthPoseEstimator::~DepthPoseEstimator()
+DoubleDepthPoseEstimator::~DoubleDepthPoseEstimator()
 {
   // [TEST] cv::destroyWindow("DEFAULT");
   // [TEST] cv::destroyWindow("FOUND");
 }
 
-// *** Chessboard를 찾아내는 함수 *** //
-void DepthPoseEstimator::chessboard_detection(cv::Mat& copied_frame)
+// *** ArucoMarker를 찾아내는 함수 *** //
+void DoubleDepthPoseEstimator::aruco_marker_detection(cv::Mat& copied_frame)
 {
+  marker_ids.clear();
+  marker_corners.clear();
+
   cv::Mat frame;
   copied_frame.copyTo(frame);
 
+  cv::aruco::detectMarkers(frame, dictionary, marker_corners, marker_ids);
 
-  std::vector<cv::Point2f> chessboard_corners;
-  bool found = cv::findChessboardCorners(
-    frame, chessboard_dimensions, chessboard_corners,
-    cv::CALIB_CB_ADAPTIVE_THRESH | cv::CALIB_CB_NORMALIZE_IMAGE | cv::CALIB_CB_FAST_CHECK
-  );
-
-  if (found)
+  if (marker_ids.size() > 0)
   {
-    detected_corners.clear();
-    detected_corners = chessboard_corners;
-
-    cv::drawChessboardCorners(frame, chessboard_dimensions, chessboard_corners, found);
+    cv::aruco::drawDetectedMarkers(frame, marker_corners, marker_ids);
     // [TEST] cv::imshow("FOUND", frame);
 
     std::vector<uchar> data;
@@ -69,10 +66,6 @@ void DepthPoseEstimator::chessboard_detection(cv::Mat& copied_frame)
     cv::imencode(".jpg", frame, data);
     compressed_image.data = data;
     compressed_image_publisher_2.publish(compressed_image);
-  }
-  else
-  {
-    detected_corners.clear();
   }
 }
 
@@ -130,32 +123,6 @@ std::tuple<Eigen::Matrix3f, Eigen::Vector3f> DepthPoseEstimator::rigid_transform
   const Eigen::Vector3f t = -R * centroid_camera + centroid_world;
 
   return std::make_tuple(R, t);
-}
-
-// *** 계산된 Rt 값을 기반으로 verification 하는 함수 *** //
-void DepthPoseEstimator::pose_verification(std::tuple<Eigen::Matrix3f, Eigen::Vector3f> Rt)
-{
-  Eigen::Matrix<float, 4, 4> Rt_4x4;
-
-  Rt_4x4(0, 0) = std::get<0>(Rt)(0, 0);
-  Rt_4x4(0, 1) = std::get<0>(Rt)(0, 1);
-  Rt_4x4(0, 2) = std::get<0>(Rt)(0, 2);
-  Rt_4x4(0, 3) = 0;
-
-  Rt_4x4(1, 0) = std::get<0>(Rt)(1, 0);
-  Rt_4x4(1, 1) = std::get<0>(Rt)(1, 1);
-  Rt_4x4(1, 2) = std::get<0>(Rt)(1, 2);
-  Rt_4x4(1, 3) = 0;
-
-  Rt_4x4(2, 0) = std::get<0>(Rt)(2, 0);
-  Rt_4x4(2, 1) = std::get<0>(Rt)(2, 1);
-  Rt_4x4(2, 2) = std::get<0>(Rt)(2, 2);
-  Rt_4x4(2, 3) = 0;
-
-  Rt_4x4(3, 0) = std::get<1>(Rt)(0);
-  Rt_4x4(3, 1) = std::get<1>(Rt)(1);
-  Rt_4x4(3, 2) = std::get<1>(Rt)(2);
-  Rt_4x4(3, 3) = 1;
 }
 
 // *** 체크보드의 월드좌표계를 저장하는 함수 *** //
@@ -234,17 +201,15 @@ sensor_msgs::PointCloud2 DepthPoseEstimator::pcl_to_sensor(pcl::PointCloud<pcl::
 
 void DepthPoseEstimator::parameter_initializer(ros::NodeHandle& node_handle)
 {
+  // 카메라 방향 설정(left: 1, right: 2)
+  node_handle.getParam("/depth_pose_estimator/DEPTH_DIRECTION", depth_direction);
+
   // 초당 프레임
   node_handle.getParam("/depth_pose_estimator/FRAMES_PER_SECONDS", frames_per_seconds);
 
-  // chessboard 관련 변수 1
-  node_handle.getParam("/depth_pose_estimator/CHESSBOARD_EDGE_SIZE", chessboard_edge_size);
-  
-  // chessboard 관련 변수 2
-  int _chessboard_width, _chessboard_height;
-  node_handle.getParam("/depth_pose_estimator/CHESSBOARD_WIDTH", _chessboard_width);
-  node_handle.getParam("/depth_pose_estimator/CHESSBOARD_HEIGHT", _chessboard_height);
-  chessboard_dimensions = cv::Size(_chessboard_width - 1, _chessboard_height - 1);  // y x 순
+  // aruco marker 관련 변수
+  node_handle.getParam("/depth_pose_estimator/ARUCO_EDGE_SIZE", aruco_edge_size);
+  node_handle.getParam("/depth_pose_estimator/ARUCO_GAP_SIZE", aruco_gap_size);
 
   // topic 관련 변수
   node_handle.getParam("/depth_pose_estimator/DEPTH_COLOR_TOPIC", depth_color_topic);
