@@ -66,7 +66,7 @@ private:
   std::string depth_camera_pointcloud_topic, depth_world_pointcloud_topic;
 
   int frames_per_seconds;
-  std::vector<cv::Point3f> object_points;
+  std::vector<std::vector<cv::Point3f>> object_points;
   pcl::PointCloud<pcl::PointXYZ> world_corners_messages;
 
   double* intrinsic_parameters;

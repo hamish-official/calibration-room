@@ -83,27 +83,39 @@ std::tuple<Eigen::Matrix3f, Eigen::Vector3f> DoubleDepthPoseEstimator::rigid_tra
   int corner_information_vector_size = corner_information_vector.size();
   // [TEST] std::cout << corner_information_vector_size << std::endl;
 
+  // 예외처리 필요 - 아루코 마커 중 4개의 코너가 발견되지 않은 경우
+  if (corner_information_vector_size % 4 != 0)
+    return std::make_tuple(Eigen::Matrix3f(), Eigen::Vector3f(0, 0, 0));
+
   camera_coordinate_points.resize(3, corner_information_vector_size);
   world_coordinate_points.resize(3, corner_information_vector_size);
   camera_substract_mean.resize(3, corner_information_vector_size);
   world_substract_mean.resize(3, corner_information_vector_size);
 
+  std::cout << "HERE" << std::endl;
+
   int count = 0;
-  for (auto &corner_information : corner_information_vector)
+  for (auto &id : marker_ids)
   {
-    camera_coordinate_points(0, count) = corner_information.x;
-    camera_coordinate_points(1, count) = corner_information.y;
-    camera_coordinate_points(2, count) = corner_information.z;
-    count++;
+    for (int i=0; i<4; i++)
+    {
+      camera_coordinate_points(0, count) = corner_information_vector[count].x;
+      camera_coordinate_points(1, count) = corner_information_vector[count].y;
+      camera_coordinate_points(2, count) = corner_information_vector[count].z;
+      count ++;
+    }
   }
-  
+
   count = 0;
-  for (auto &object_point : object_points)
+  for (auto &id : marker_ids)
   {
-    world_coordinate_points(0 ,count) = object_point.x;
-    world_coordinate_points(1, count) = object_point.y;
-    world_coordinate_points(2, count) = object_point.z;
-    count++;
+    for (int i=0; i<4; i++)
+    {
+      world_coordinate_points(0 ,count) = object_points[id][i].x;
+      world_coordinate_points(1, count) = object_points[id][i].y;
+      world_coordinate_points(2, count) = object_points[id][i].z;
+      count++;
+    }
   }
 
   const Eigen::Vector3f centroid_camera = camera_coordinate_points.rowwise().mean();
@@ -130,21 +142,31 @@ std::tuple<Eigen::Matrix3f, Eigen::Vector3f> DoubleDepthPoseEstimator::rigid_tra
   return std::make_tuple(R, t);
 }
 
-// *** 체크보드의 월드좌표계를 저장하는 함수 *** //
+// *** 아루코 마커의 월드좌표계를 저장하는 함수 *** //
 void DoubleDepthPoseEstimator::create_world_coordinate_system()
 {
   object_points.clear();
 
-  // for (int i = 0; i < chessboard_dimensions.height; i++)
-  // {
-  //   for (int j = 0; j < chessboard_dimensions.width; j++)
-  //   {
-  //     cv::Point3f corner(1.36f, 0.35f - j * (chessboard_edge_size), 0.6f - i * (chessboard_edge_size));
-  //     pcl::PointXYZ corner_point(corner.x, corner.y, corner.z);
-  //     object_points.push_back(corner);
-  //     world_corners_messages.push_back(corner_point);
-  //   }
-  // }
+  for (int i=0; i<7; i++)
+  {
+    std::vector<cv::Point3f> each_points;
+    cv::Point3f corner_left_top(1.36f - 0.1f, -0.65f + aruco_edge_size * (2*i), 0.0f);
+    cv::Point3f corner_right_top(1.36f - 0.1f, -0.65f + aruco_edge_size * (2*i+1), 0.0f);
+    cv::Point3f corner_right_buttom(1.36f - 0.1f - aruco_edge_size, -0.65f + aruco_edge_size * (2*i), 0.0f);
+    cv::Point3f corner_left_buttom(1.36f - 0.1f - aruco_edge_size, -0.65f + aruco_edge_size * (2*i+1), 0.0f);
+
+    world_corners_messages.push_back(pcl::PointXYZ(corner_left_top.x, corner_left_top.y, corner_left_top.z));
+    world_corners_messages.push_back(pcl::PointXYZ(corner_right_top.x, corner_right_top.y, corner_right_top.z));
+    world_corners_messages.push_back(pcl::PointXYZ(corner_right_buttom.x, corner_right_buttom.y, corner_right_buttom.z));
+    world_corners_messages.push_back(pcl::PointXYZ(corner_left_buttom.x, corner_left_buttom.y, corner_left_buttom.z));
+
+    each_points.push_back(corner_left_top);
+    each_points.push_back(corner_right_top);
+    each_points.push_back(corner_right_buttom);
+    each_points.push_back(corner_left_buttom);
+
+    object_points.push_back(each_points);
+  }
 }
 
 // *** 인코딩 방식을 상수화하는 함수 *** //

@@ -41,5 +41,101 @@ void DoubleDepthPoseEstimator::image_callback(const sensor_msgs::Image::ConstPtr
 
 void DoubleDepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::ConstPtr& depth_messages)
 {
-    // YET
+  if (!(marker_ids.size() > 0)) return;
+
+  // /camera/depth(_registered)/points 메시지를 pcl::PointCloud<pcl::PointXYZ> 형태로 변환
+  sensor_msgs::PointCloud2 depth_points = *depth_messages;
+  pcl::PointCloud<pcl::PointXYZ> pcl_depth_points;
+  pcl_depth_points = sensor_to_pcl(depth_points);
+
+  std::vector<cv::Point3f> aruco_marker_information_vector;
+  pcl::PointCloud<pcl::PointXYZ> camera_corners_messages;
+
+  for(auto &id : marker_ids)
+  {
+    // IR 영상 및 COLOR 영상 간 좌표축 차이 반영
+    /* [ORIGINAL]
+    */
+    pcl::PointXYZ _corner_point_xyz_lt = pcl_depth_points.at(marker_corners[id][0].x, marker_corners[id][0].y);
+    pcl::PointXYZ _corner_point_xyz_rt = pcl_depth_points.at(marker_corners[id][1].x, marker_corners[id][1].y);
+    pcl::PointXYZ _corner_point_xyz_rb = pcl_depth_points.at(marker_corners[id][2].x, marker_corners[id][2].y);
+    pcl::PointXYZ _corner_point_xyz_lb = pcl_depth_points.at(marker_corners[id][3].x, marker_corners[id][3].y);
+    /* [ALTERNATIVE]
+    pcl::PointXYZ _corner_point_xyz_lt = pcl_depth_points.at(marker_corners[id][0].x - 3, marker_corners[id][0].y + 50);
+    pcl::PointXYZ _corner_point_xyz_rt = pcl_depth_points.at(marker_corners[id][1].x - 3, marker_corners[id][1].y + 50);
+    pcl::PointXYZ _corner_point_xyz_rb = pcl_depth_points.at(marker_corners[id][2].x - 3, marker_corners[id][2].y + 50);
+    pcl::PointXYZ _corner_point_xyz_lb = pcl_depth_points.at(marker_corners[id][3].x - 3, marker_corners[id][3].y + 50);
+    */
+
+    // 오른손 법칙에 맞게 좌표축을 변경 내용 반영
+    /* [ORIGINAL]
+    cv::Point3f _corner_lt(_corner_point_xyz_lt.x, _corner_point_xyz_lt.y, _corner_point_xyz_lt.z);
+    cv::Point3f _corner_rt(_corner_point_xyz_rt.x, _corner_point_xyz_rt.y, _corner_point_xyz_rt.z);
+    cv::Point3f _corner_rb(_corner_point_xyz_rb.x, _corner_point_xyz_rb.y, _corner_point_xyz_rb.z);
+    cv::Point3f _corner_lb(_corner_point_xyz_lb.x, _corner_point_xyz_lb.y, _corner_point_xyz_lb.z);
+
+    */
+    // [ALTERNATIVE]
+    cv::Point3f _corner_lt(_corner_point_xyz_lt.z, _corner_point_xyz_lt.x * (-1), _corner_point_xyz_lt.y * (-1));
+    cv::Point3f _corner_rt(_corner_point_xyz_rt.z, _corner_point_xyz_rt.x * (-1), _corner_point_xyz_rt.y * (-1));
+    cv::Point3f _corner_rb(_corner_point_xyz_rb.z, _corner_point_xyz_rb.x * (-1), _corner_point_xyz_rb.y * (-1));
+    cv::Point3f _corner_lb(_corner_point_xyz_lb.z, _corner_point_xyz_lb.x * (-1), _corner_point_xyz_lb.y * (-1));
+
+    aruco_marker_information_vector.push_back(_corner_lt);
+    aruco_marker_information_vector.push_back(_corner_rt);
+    aruco_marker_information_vector.push_back(_corner_rb);
+    aruco_marker_information_vector.push_back(_corner_lb);
+
+    camera_corners_messages.push_back(_corner_point_xyz_lt);
+    camera_corners_messages.push_back(_corner_point_xyz_rt);
+    camera_corners_messages.push_back(_corner_point_xyz_rb);
+    camera_corners_messages.push_back(_corner_point_xyz_lb);
+
+    std::cout << "THIS" << std::endl;
+
+    /* [TEST]
+    std::cout << _corner_lt.x << " " << _corner_lt.y << " " << _corner_lt.z << std::endl;
+    std::cout << _corner_rt.x << " " << _corner_rt.y << " " << _corner_rt.z << std::endl;
+    std::cout << _corner_rb.x << " " << _corner_rb.y << " " << _corner_rb.z << std::endl;
+    std::cout << _corner_lb.x << " " << _corner_lb.y << " " << _corner_lb.z << std::endl;
+    */
+  }
+
+  std::tuple<Eigen::Matrix3f, Eigen::Vector3f> Rt = rigid_transformation(aruco_marker_information_vector);  // [CORE METHOD]
+
+  Eigen::Matrix3f eigen_rotation_matrix = std::get<0>(Rt);
+  Eigen::Vector3f eigen_translation_vector = std::get<1>(Rt);
+
+  cv::eigen2cv(eigen_rotation_matrix, rotation_vector);
+  cv::eigen2cv(eigen_translation_vector, translation_vector);
+
+  double x, y, z, roll, pitch, yaw;
+  x = eigen_translation_vector(0);
+  y = eigen_translation_vector(1);
+  z = eigen_translation_vector(2);
+  roll = std::atan2(eigen_rotation_matrix(2, 1), eigen_rotation_matrix(2, 2));
+  pitch = std::atan2(
+    -eigen_rotation_matrix(2, 0),
+    std::sqrt(eigen_rotation_matrix(2, 1) * eigen_rotation_matrix(2, 1) + eigen_rotation_matrix(2, 2) * eigen_rotation_matrix(2, 2))
+  );
+  yaw = std::atan2(eigen_rotation_matrix(1, 0), eigen_rotation_matrix(0, 0));
+
+  if (!(std::isnan(x) + std::isnan(y) + std::isnan(z)))
+  {
+    // [TEST]
+    std::cout << ros::this_node::getName() << " x, y, z >>> " << x << ", " << y << ", " << z << std::endl;
+    // [TEST]
+    std::cout << ros::this_node::getName() << " roll, pitch, yaw >>> " << roll << ", " << pitch << ", " << yaw << std::endl;
+    
+    static tf::TransformBroadcaster tf_broadcaster;
+    tf::Transform tf_transform;
+    tf::Quaternion tf_quaternion;
+
+    tf_transform.setOrigin(tf::Vector3(x, y, z));
+    tf_quaternion.setRPY(roll, pitch, yaw);
+    tf_transform.setRotation(tf_quaternion);
+    tf_broadcaster.sendTransform(tf::StampedTransform(tf_transform, ros::Time::now(), "base_link", depth_tf));
+  }
+
+  camera_corners_publisher.publish(pcl_to_sensor(camera_corners_messages));
 }
