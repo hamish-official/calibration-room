@@ -97,6 +97,5 @@ public:
   pcl::PointCloud<pcl::PointXYZ> sensor_to_pcl(sensor_msgs::PointCloud2 sensor_messages);
   sensor_msgs::PointCloud2 pcl_to_sensor(pcl::PointCloud<pcl::PointXYZ> pcl_messages);
   void parameter_initializer(ros::NodeHandle& node_handle);
-};
 
 #endif

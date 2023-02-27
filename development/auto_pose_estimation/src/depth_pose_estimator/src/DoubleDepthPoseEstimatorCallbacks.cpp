@@ -35,6 +35,24 @@ void DoubleDepthPoseEstimator::image_callback(const sensor_msgs::Image::ConstPtr
 
   aruco_marker_detection(copied_frame);
 
+  int count = 0;
+  for (auto &marker_corner : marker_corners)
+  {
+    // [TEST] std::cout << marker_ids[count] << ": ";
+    // [TEST] std::cout << marker_corner.size() << std::endl;
+
+    if (marker_corner.size() != 4)
+    {
+      // [TEST]
+      std::cout << marker_ids[count] << "의 요소 수가 4개 미만이므로 관련 데이터를 삭제합니다." << std::endl;
+
+      marker_ids.erase(marker_ids.begin() + count);
+      marker_corners.erase(marker_corners.begin() + count);
+    }
+
+    count++;
+  }
+
   world_corners_publisher.publish(pcl_to_sensor(world_corners_messages));
   cv::waitKey(1000/frames_per_seconds);
 }
@@ -53,19 +71,27 @@ void DoubleDepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::Co
 
   for(auto &id : marker_ids)
   {
-    // IR 영상 및 COLOR 영상 간 좌표축 차이 반영
-    /* [ORIGINAL]
-    */
-    pcl::PointXYZ _corner_point_xyz_lt = pcl_depth_points.at(marker_corners[id][0].x, marker_corners[id][0].y);
-    pcl::PointXYZ _corner_point_xyz_rt = pcl_depth_points.at(marker_corners[id][1].x, marker_corners[id][1].y);
-    pcl::PointXYZ _corner_point_xyz_rb = pcl_depth_points.at(marker_corners[id][2].x, marker_corners[id][2].y);
-    pcl::PointXYZ _corner_point_xyz_lb = pcl_depth_points.at(marker_corners[id][3].x, marker_corners[id][3].y);
-    /* [ALTERNATIVE]
-    pcl::PointXYZ _corner_point_xyz_lt = pcl_depth_points.at(marker_corners[id][0].x - 3, marker_corners[id][0].y + 50);
-    pcl::PointXYZ _corner_point_xyz_rt = pcl_depth_points.at(marker_corners[id][1].x - 3, marker_corners[id][1].y + 50);
-    pcl::PointXYZ _corner_point_xyz_rb = pcl_depth_points.at(marker_corners[id][2].x - 3, marker_corners[id][2].y + 50);
-    pcl::PointXYZ _corner_point_xyz_lb = pcl_depth_points.at(marker_corners[id][3].x - 3, marker_corners[id][3].y + 50);
-    */
+    pcl::PointXYZ _corner_point_xyz_lt, _corner_point_xyz_rt, _corner_point_xyz_rb, _corner_point_xyz_lb;
+
+    try {
+      // IR 영상 및 COLOR 영상 간 좌표축 차이 반영
+      /* [ORIGINAL]
+      */
+      _corner_point_xyz_lt = pcl_depth_points.at(marker_corners[id][0].x, marker_corners[id][0].y);
+      _corner_point_xyz_rt = pcl_depth_points.at(marker_corners[id][1].x, marker_corners[id][1].y);
+      _corner_point_xyz_rb = pcl_depth_points.at(marker_corners[id][2].x, marker_corners[id][2].y);
+      _corner_point_xyz_lb = pcl_depth_points.at(marker_corners[id][3].x, marker_corners[id][3].y);
+      
+      /* [ALTERNATIVE]
+      _corner_point_xyz_lt = pcl_depth_points.at(marker_corners[id][0].x - 3, marker_corners[id][0].y + 50);
+      _corner_point_xyz_rt = pcl_depth_points.at(marker_corners[id][1].x - 3, marker_corners[id][1].y + 50);
+      _corner_point_xyz_rb = pcl_depth_points.at(marker_corners[id][2].x - 3, marker_corners[id][2].y + 50);
+      _corner_point_xyz_lb = pcl_depth_points.at(marker_corners[id][3].x - 3, marker_corners[id][3].y + 50);
+      */
+    }
+    catch (int e) {
+      continue;
+    }
 
     // 오른손 법칙에 맞게 좌표축을 변경 내용 반영
     /* [ORIGINAL]
@@ -90,8 +116,6 @@ void DoubleDepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::Co
     camera_corners_messages.push_back(_corner_point_xyz_rt);
     camera_corners_messages.push_back(_corner_point_xyz_rb);
     camera_corners_messages.push_back(_corner_point_xyz_lb);
-
-    std::cout << "THIS" << std::endl;
 
     /* [TEST]
     std::cout << _corner_lt.x << " " << _corner_lt.y << " " << _corner_lt.z << std::endl;
@@ -123,9 +147,9 @@ void DoubleDepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::Co
   if (!(std::isnan(x) + std::isnan(y) + std::isnan(z)))
   {
     // [TEST]
-    std::cout << ros::this_node::getName() << " x, y, z >>> " << x << ", " << y << ", " << z << std::endl;
+    std::cout << "[" << ros::this_node::getName() << "] x, y, z >>> " << x << ", " << y << ", " << z << std::endl;
     // [TEST]
-    std::cout << ros::this_node::getName() << " roll, pitch, yaw >>> " << roll << ", " << pitch << ", " << yaw << std::endl;
+    std::cout << "[" << ros::this_node::getName() << "] roll, pitch, yaw >>> " << roll << ", " << pitch << ", " << yaw << std::endl;
     
     static tf::TransformBroadcaster tf_broadcaster;
     tf::Transform tf_transform;

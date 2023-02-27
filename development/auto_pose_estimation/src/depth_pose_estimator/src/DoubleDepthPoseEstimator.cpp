@@ -85,14 +85,15 @@ std::tuple<Eigen::Matrix3f, Eigen::Vector3f> DoubleDepthPoseEstimator::rigid_tra
 
   // 예외처리 필요 - 아루코 마커 중 4개의 코너가 발견되지 않은 경우
   if (corner_information_vector_size % 4 != 0)
+  {
+    std::cout << "아루코 마커 코너 개수가 4의 배수가 아닙니다." << std::endl;
     return std::make_tuple(Eigen::Matrix3f(), Eigen::Vector3f(0, 0, 0));
+  }
 
   camera_coordinate_points.resize(3, corner_information_vector_size);
   world_coordinate_points.resize(3, corner_information_vector_size);
   camera_substract_mean.resize(3, corner_information_vector_size);
   world_substract_mean.resize(3, corner_information_vector_size);
-
-  std::cout << "HERE" << std::endl;
 
   int count = 0;
   for (auto &id : marker_ids)
@@ -147,13 +148,13 @@ void DoubleDepthPoseEstimator::create_world_coordinate_system()
 {
   object_points.clear();
 
-  for (int i=0; i<7; i++)
+  for (int i=0; i<8; i++)
   {
     std::vector<cv::Point3f> each_points;
-    cv::Point3f corner_left_top(1.36f - 0.1f, -0.65f + aruco_edge_size * (2*i), 0.0f);
-    cv::Point3f corner_right_top(1.36f - 0.1f, -0.65f + aruco_edge_size * (2*i+1), 0.0f);
-    cv::Point3f corner_right_buttom(1.36f - 0.1f - aruco_edge_size, -0.65f + aruco_edge_size * (2*i), 0.0f);
-    cv::Point3f corner_left_buttom(1.36f - 0.1f - aruco_edge_size, -0.65f + aruco_edge_size * (2*i+1), 0.0f);
+    cv::Point3f corner_left_top(1.36f - aruco_gap_size, -0.75f + aruco_gap_size + i * (aruco_edge_size + aruco_gap_size), 0.0f);
+    cv::Point3f corner_right_top(1.36f - aruco_gap_size, -0.75f + aruco_gap_size + i * (aruco_edge_size + aruco_gap_size) + aruco_edge_size, 0.0f);
+    cv::Point3f corner_right_buttom(1.36f - aruco_gap_size - aruco_edge_size, -0.75f + aruco_gap_size + i * (aruco_edge_size + aruco_gap_size), 0.0f);
+    cv::Point3f corner_left_buttom(1.36f - aruco_gap_size - aruco_edge_size, -0.75f + aruco_gap_size + i * (aruco_edge_size + aruco_gap_size) + aruco_edge_size, 0.0f);
 
     world_corners_messages.push_back(pcl::PointXYZ(corner_left_top.x, corner_left_top.y, corner_left_top.z));
     world_corners_messages.push_back(pcl::PointXYZ(corner_right_top.x, corner_right_top.y, corner_right_top.z));
@@ -228,7 +229,7 @@ sensor_msgs::PointCloud2 DoubleDepthPoseEstimator::pcl_to_sensor(pcl::PointCloud
 
 void DoubleDepthPoseEstimator::parameter_initializer(ros::NodeHandle& node_handle)
 {
-  std::cout << ros::this_node::getName() << std::endl;
+  // [TEST] std::cout << ros::this_node::getName() << std::endl;
 
   if (ros::this_node::getName() == "/right_depth_pose_estimator")
   {
