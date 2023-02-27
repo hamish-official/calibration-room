@@ -1,7 +1,8 @@
 #include "depth_pose_estimator/DepthPoseEstimator.hpp"
 
 // *** 생성자 함수 *** //
-DepthPoseEstimator::DepthPoseEstimator(ros::NodeHandle& node_handle) {
+DepthPoseEstimator::DepthPoseEstimator(ros::NodeHandle& node_handle)
+{
   parameter_initializer(node_handle);
 
   // subscriber

@@ -5,7 +5,7 @@ import { exec } from 'child_process';
 const router = Router();
 
 router.get('/on', async (request: Request, response: Response) => {
-  exec('roslaunch depth_pose_estimator integrated_pose_estimator_launch.launch', (err, stdout, stderr) => {
+  exec('roslaunch depth_pose_estimator classic_pose_estimator_launch.launch', (err, stdout, stderr) => {
     console.log(err);
     console.log(stdout);
     console.error(stderr);
