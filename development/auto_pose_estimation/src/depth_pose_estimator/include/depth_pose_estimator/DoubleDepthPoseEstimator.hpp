@@ -64,6 +64,7 @@ private:
   std::string depth_color_topic, depth_registered_topic, depth_tf;
   std::string depth_image_01, depth_image_02;
   std::string depth_camera_pointcloud_topic, depth_world_pointcloud_topic;
+  std::vector<double> intrinsic_values;
 
   int frames_per_seconds;
   std::vector<std::vector<cv::Point3f>> object_points;
@@ -97,5 +98,6 @@ public:
   pcl::PointCloud<pcl::PointXYZ> sensor_to_pcl(sensor_msgs::PointCloud2 sensor_messages);
   sensor_msgs::PointCloud2 pcl_to_sensor(pcl::PointCloud<pcl::PointXYZ> pcl_messages);
   void parameter_initializer(ros::NodeHandle& node_handle);
+};
 
 #endif

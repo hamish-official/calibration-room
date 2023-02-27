@@ -23,7 +23,11 @@ DoubleDepthPoseEstimator::DoubleDepthPoseEstimator(ros::NodeHandle& node_handle)
   create_world_coordinate_system();
 
   // 내부 파라미터값 1
-  double _intrinsic_parameters[] = {453.7543640, 0.0, 323.54632568, 0.0, 453.7543640, 241.9261780, 0.0, 0.0, 1.0};
+  double _intrinsic_parameters[] = {
+    intrinsic_values[0], intrinsic_values[1], intrinsic_values[2],
+    intrinsic_values[3], intrinsic_values[4], intrinsic_values[5],
+    intrinsic_values[6], intrinsic_values[7], intrinsic_values[8]
+  };
   intrinsic_parameters = _intrinsic_parameters;
   double _radial_tangential_distortion[] = {0.0, 0.0, 0.0, 0.0};
   radial_tangential_distortion = _radial_tangential_distortion;
@@ -151,10 +155,13 @@ void DoubleDepthPoseEstimator::create_world_coordinate_system()
   for (int i=0; i<8; i++)
   {
     std::vector<cv::Point3f> each_points;
-    cv::Point3f corner_left_top(1.36f - aruco_gap_size, -0.75f + aruco_gap_size + i * (aruco_edge_size + aruco_gap_size), 0.0f);
-    cv::Point3f corner_right_top(1.36f - aruco_gap_size, -0.75f + aruco_gap_size + i * (aruco_edge_size + aruco_gap_size) + aruco_edge_size, 0.0f);
-    cv::Point3f corner_right_buttom(1.36f - aruco_gap_size - aruco_edge_size, -0.75f + aruco_gap_size + i * (aruco_edge_size + aruco_gap_size), 0.0f);
-    cv::Point3f corner_left_buttom(1.36f - aruco_gap_size - aruco_edge_size, -0.75f + aruco_gap_size + i * (aruco_edge_size + aruco_gap_size) + aruco_edge_size, 0.0f);
+    float y_for_left = -0.75f + aruco_gap_size + i * (aruco_edge_size + aruco_gap_size);
+    float y_for_right = -0.75f + aruco_gap_size + aruco_edge_size + i * (aruco_edge_size + aruco_gap_size);
+
+    cv::Point3f corner_left_top(1.36f - aruco_gap_size, y_for_left, 0.0f);
+    cv::Point3f corner_right_top(1.36f - aruco_gap_size, y_for_right, 0.0f);
+    cv::Point3f corner_right_buttom(1.36f - aruco_gap_size - aruco_edge_size, y_for_right, 0.0f);
+    cv::Point3f corner_left_buttom(1.36f - aruco_gap_size - aruco_edge_size, y_for_left, 0.0f);
 
     world_corners_messages.push_back(pcl::PointXYZ(corner_left_top.x, corner_left_top.y, corner_left_top.z));
     world_corners_messages.push_back(pcl::PointXYZ(corner_right_top.x, corner_right_top.y, corner_right_top.z));
@@ -255,6 +262,9 @@ void DoubleDepthPoseEstimator::parameter_initializer(ros::NodeHandle& node_handl
     // 포인트클라우드 관련 변수
     node_handle.getParam("/depth_pose_estimator/RIGHT_DEPTH_CAMERA_POINTCLOUD_TOPIC", depth_camera_pointcloud_topic);
     node_handle.getParam("/depth_pose_estimator/RIGHT_DEPTH_WORLD_POINTCLOUD_TOPIC", depth_world_pointcloud_topic);
+  
+    // Camera Intrinsic 관련 변수
+    node_handle.getParam("/depth_pose_estimator/RIGHT_DEPTH_INTRINSIC_VALUE", intrinsic_values);
   }
   else
   {
@@ -280,5 +290,8 @@ void DoubleDepthPoseEstimator::parameter_initializer(ros::NodeHandle& node_handl
     // 포인트클라우드 관련 변수
     node_handle.getParam("/depth_pose_estimator/LEFT_DEPTH_CAMERA_POINTCLOUD_TOPIC", depth_camera_pointcloud_topic);
     node_handle.getParam("/depth_pose_estimator/LEFT_DEPTH_WORLD_POINTCLOUD_TOPIC", depth_world_pointcloud_topic);
+
+    // Camera Intrinsic 관련 변수
+    node_handle.getParam("/depth_pose_estimator/LEFT_DEPTH_INTRINSIC_VALUE", intrinsic_values);
   }
 }

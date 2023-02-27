@@ -99,13 +99,17 @@ void DoubleDepthPoseEstimator::depth_callback(const sensor_msgs::PointCloud2::Co
     cv::Point3f _corner_rt(_corner_point_xyz_rt.x, _corner_point_xyz_rt.y, _corner_point_xyz_rt.z);
     cv::Point3f _corner_rb(_corner_point_xyz_rb.x, _corner_point_xyz_rb.y, _corner_point_xyz_rb.z);
     cv::Point3f _corner_lb(_corner_point_xyz_lb.x, _corner_point_xyz_lb.y, _corner_point_xyz_lb.z);
-
     */
     // [ALTERNATIVE]
     cv::Point3f _corner_lt(_corner_point_xyz_lt.z, _corner_point_xyz_lt.x * (-1), _corner_point_xyz_lt.y * (-1));
     cv::Point3f _corner_rt(_corner_point_xyz_rt.z, _corner_point_xyz_rt.x * (-1), _corner_point_xyz_rt.y * (-1));
     cv::Point3f _corner_rb(_corner_point_xyz_rb.z, _corner_point_xyz_rb.x * (-1), _corner_point_xyz_rb.y * (-1));
     cv::Point3f _corner_lb(_corner_point_xyz_lb.z, _corner_point_xyz_lb.x * (-1), _corner_point_xyz_lb.y * (-1));
+
+    std::cout << "LT & LB" << std::endl;
+    std::cout << _corner_lt.x << " " << _corner_lt.y << " " << _corner_lt.z << std::endl;
+    std::cout << _corner_lb.x << " " << _corner_lb.y << " " << _corner_lb.z << std::endl;
+
 
     aruco_marker_information_vector.push_back(_corner_lt);
     aruco_marker_information_vector.push_back(_corner_rt);
