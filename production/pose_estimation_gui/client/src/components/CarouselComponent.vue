@@ -12,12 +12,12 @@
           <div class="row">
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="depth_1_image.image_1.value" style="width: 100%; height: 100%" />
+                <img :src="images.depth_1_image.image_1.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="depth_1_image.image_2.value" style="width: 100%; height: 100%" />
+                <img :src="images.depth_1_image.image_2.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="row d-flex justify-content-center mt-3 mb-5" style="background-color: white;">
@@ -29,12 +29,12 @@
           <div class="row">
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="depth_2_image.image_1.value" style="width: 100%; height: 100%" />
+                <img :src="images.depth_2_image.image_1.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="depth_2_image.image_2.value" style="width: 100%; height: 100%" />
+                <img :src="images.depth_2_image.image_2.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="row d-flex justify-content-center mt-3 mb-5" style="background-color: white;">
@@ -52,12 +52,12 @@
           <div class="row">
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="lidar_1_image.image_1.value" style="width: 100%; height: 100%" />
+                <img :src="images.lidar_1_image.image_1.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="lidar_1_image.image_2.value" style="width: 100%; height: 100%" />
+                <img :src="images.lidar_1_image.image_2.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="row d-flex justify-content-center mt-3 mb-5" style="background-color: white;">
@@ -69,12 +69,12 @@
           <div class="row">
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="lidar_2_image.image_1.value" style="width: 100%; height: 100%" />
+                <img :src="images.lidar_2_image.image_1.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="lidar_2_image.image_2.value" style="width: 100%; height: 100%" />
+                <img :src="images.lidar_2_image.image_2.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="row d-flex justify-content-center mt-3 mb-5" style="background-color: white;">
@@ -92,12 +92,12 @@
           <div class="row">
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="camera_1_image.image_1.value" style="width: 100%; height: 100%" />
+                <img :src="images.camera_1_image.image_1.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="camera_1_image.image_2.value" style="width: 100%; height: 100%" />
+                <img :src="images.camera_1_image.image_2.value" style="width: 100%; height: 100%" />
               </div>
             </div>
             <div class="row d-flex justify-content-center mt-3 mb-5" style="background-color: white;">
@@ -125,117 +125,12 @@
 
 <script setup>
 import ROSLIB from 'roslib';
-import { ref } from 'vue';
 
 const props = defineProps({
   ros: ROSLIB.Ros,
   sensors: Array,
-});
-
-const depth_1_image = { image_1: ref(''), image_2: ref('') };
-const depth_2_image = { image_1: ref(''), image_2: ref('') };
-const lidar_1_image = { image_1: ref(''), image_2: ref('') };
-const lidar_2_image = { image_1: ref(''), image_2: ref('') };
-const camera_1_image = { image_1: ref(''), image_2: ref('') };
-
-const depth_1_image_1 = new ROSLIB.Topic({
-  ros: props.ros,
-  name: '/depth_01_image_01',
-  messageType: 'sensor_msgs/CompressedImage'
-});
-
-depth_1_image_1.subscribe((message) => {
-  depth_1_image.image_1.value = 'data:image/jpg;base64,' + message.data;
-});
-
-const depth_1_image_2 = new ROSLIB.Topic({
-  ros: props.ros,
-  name: '/depth_01_image_02',
-  messageType: 'sensor_msgs/CompressedImage'
-});
-
-depth_1_image_2.subscribe((message) => {
-  depth_1_image.image_2.value = 'data:image/jpg;base64,' + message.data;
-});
-
-const depth_2_image_1 = new ROSLIB.Topic({
-  ros: props.ros,
-  name: '/depth_02_image_01',
-  messageType: 'sensor_msgs/CompressedImage'
-});
-
-depth_2_image_1.subscribe((message) => {
-  depth_2_image.image_1.value = 'data:image/jpg;base64,' + message.data;
-});
-
-const depth_2_image_2 = new ROSLIB.Topic({
-  ros: props.ros,
-  name: '/depth_02_image_02',
-  messageType: 'sensor_msgs/CompressedImage'
-});
-
-depth_2_image_2.subscribe((message) => {
-  depth_2_image.image_2.value = 'data:image/jpg;base64,' + message.data;
-});
-
-const camera_1_image_1 = new ROSLIB.Topic({
-  ros: props.ros,
-  name: '/camera_01_image_01',
-  messageType: 'sensor_msgs/CompressedImage'
-});
-
-camera_1_image_1.subscribe((message) => {
-  camera_1_image.image_1.value = 'data:image/jpg;base64,' + message.data;
-});
-
-const camera_1_image_2 = new ROSLIB.Topic({
-  ros: props.ros,
-  name: '/camera_01_image_02',
-  messageType: 'sensor_msgs/CompressedImage'
-});
-
-camera_1_image_2.subscribe((message) => {
-  camera_1_image.image_2.value = 'data:image/jpg;base64,' + message.data;
-});
-
-const lidar_1_image_1 = new ROSLIB.Topic({
-  ros: props.ros,
-  name: '/lidar_01_image_01',
-  messageType: 'sensor_msgs/CompressedImage'
-});
-
-lidar_1_image_1.subscribe((message) => {
-  lidar_1_image.image_1.value = 'data:image/jpg;base64,' + message.data;
-});
-
-const lidar_1_image_2 = new ROSLIB.Topic({
-  ros: props.ros,
-  name: '/lidar_01_image_02',
-  messageType: 'sensor_msgs/CompressedImage'
-});
-
-lidar_1_image_2.subscribe((message) => {
-  lidar_1_image.image_2.value = 'data:image/jpg;base64,' + message.data;
-});
-
-const lidar_2_image_1 = new ROSLIB.Topic({
-  ros: props.ros,
-  name: '/lidar_02_image_01',
-  messageType: 'sensor_msgs/CompressedImage'
-});
-
-lidar_2_image_1.subscribe((message) => {
-  lidar_2_image.image_1.value = 'data:image/jpg;base64,' + message.data;
-});
-
-const lidar_2_image_2 = new ROSLIB.Topic({
-  ros: props.ros,
-  name: '/lidar_02_image_02',
-  messageType: 'sensor_msgs/CompressedImage'
-});
-
-lidar_2_image_2.subscribe((message) => {
-  lidar_2_image.image_2.value = 'data:image/jpg;base64,' + message.data;
+  images: Object,
+  topics: Object,
 });
 </script>
 

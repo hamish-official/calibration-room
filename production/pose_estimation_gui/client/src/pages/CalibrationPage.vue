@@ -78,7 +78,7 @@
         </div>
       </div>
       
-      <CarouselComponent :ros="ros" :sensors="sensors" />
+      <CarouselComponent :ros="ros" :sensors="sensors" :topics="topics" :images="images" />
     </div>
   </div>
 </template>
@@ -117,6 +117,128 @@ const lidar_1 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: 
 const lidar_2 = { x: ref('0'), y: ref('0'), z: ref('0'), roll: ref('0'), pitch: ref('0'), yaw: ref('0') };
 
 const sensors = [depth_1, depth_2, lidar_1, lidar_2, camera_1];
+
+const topics = {
+  depth_1_image_1: ROSLIB.Topic,
+  depth_1_image_2: ROSLIB.Topic,
+  depth_2_image_1: ROSLIB.Topic,
+  depth_2_image_2: ROSLIB.Topic,
+  lidar_1_image_1: ROSLIB.Topic,
+  lidar_1_image_2: ROSLIB.Topic,
+  lidar_2_image_1: ROSLIB.Topic,
+  lidar_2_image_2: ROSLIB.Topic,
+  camera_1_image_1: ROSLIB.Topic,
+  camera_1_image_2: ROSLIB.Topic,
+};
+
+const images = {
+  depth_1_image: { image_1: ref(''), image_2: ref('') },
+  depth_2_image: { image_1: ref(''), image_2: ref('') },
+  lidar_1_image: { image_1: ref(''), image_2: ref('') },
+  lidar_2_image: { image_1: ref(''), image_2: ref('') },
+  camera_1_image: { image_1: ref(''), image_2: ref('') }
+};
+
+topics.depth_1_image_1 = new ROSLIB.Topic({
+  ros: ros,
+  name: '/depth_01_image_01',
+  messageType: 'sensor_msgs/CompressedImage'
+});
+
+topics.depth_1_image_2 = new ROSLIB.Topic({
+  ros: ros,
+  name: '/depth_01_image_02',
+  messageType: 'sensor_msgs/CompressedImage'
+});
+
+topics.depth_2_image_1 = new ROSLIB.Topic({
+  ros: ros,
+  name: '/depth_02_image_01',
+  messageType: 'sensor_msgs/CompressedImage'
+});
+
+topics.depth_2_image_2 = new ROSLIB.Topic({
+  ros: ros,
+  name: '/depth_02_image_02',
+  messageType: 'sensor_msgs/CompressedImage'
+});
+
+topics.camera_1_image_1 = new ROSLIB.Topic({
+  ros: ros,
+  name: '/camera_01_image_01',
+  messageType: 'sensor_msgs/CompressedImage'
+});
+
+topics.camera_1_image_2 = new ROSLIB.Topic({
+  ros: ros,
+  name: '/camera_01_image_02',
+  messageType: 'sensor_msgs/CompressedImage'
+});
+
+topics.lidar_1_image_1 = new ROSLIB.Topic({
+  ros: ros,
+  name: '/lidar_01_image_01',
+  messageType: 'sensor_msgs/CompressedImage'
+});
+
+topics.lidar_1_image_2 = new ROSLIB.Topic({
+  ros: ros,
+  name: '/lidar_01_image_02',
+  messageType: 'sensor_msgs/CompressedImage'
+});
+
+topics.lidar_2_image_1 = new ROSLIB.Topic({
+  ros: ros,
+  name: '/lidar_02_image_01',
+  messageType: 'sensor_msgs/CompressedImage'
+});
+
+topics.lidar_2_image_2 = new ROSLIB.Topic({
+  ros: ros,
+  name: '/lidar_02_image_02',
+  messageType: 'sensor_msgs/CompressedImage'
+});
+
+topics.depth_1_image_1.subscribe((message) => {
+  images.depth_1_image.image_1.value = 'data:image/jpg;base64,' + message.data;
+});
+
+topics.depth_1_image_2.subscribe((message) => {
+  images.depth_1_image.image_2.value = 'data:image/jpg;base64,' + message.data;
+});
+
+topics.depth_2_image_1.subscribe((message) => {
+  images.depth_2_image.image_1.value = 'data:image/jpg;base64,' + message.data;
+});
+
+topics.depth_2_image_2.subscribe((message) => {
+  images.depth_2_image.image_2.value = 'data:image/jpg;base64,' + message.data;
+});
+
+topics.camera_1_image_1.subscribe((message) => {
+  images.camera_1_image.image_1.value = 'data:image/jpg;base64,' + message.data;
+});
+
+topics.camera_1_image_2.subscribe((message) => {
+  images.camera_1_image.image_2.value = 'data:image/jpg;base64,' + message.data;
+});
+
+topics.lidar_1_image_1.subscribe((message) => {
+  images.lidar_1_image.image_1.value = 'data:image/jpg;base64,' + message.data;
+});
+
+topics.lidar_1_image_2.subscribe((message) => {
+  images.lidar_1_image.image_2.value = 'data:image/jpg;base64,' + message.data;
+});
+
+topics.lidar_2_image_1.subscribe((message) => {
+  images.lidar_2_image.image_1.value = 'data:image/jpg;base64,' + message.data;
+});
+
+topics.lidar_2_image_2.subscribe((message) => {
+  images.lidar_2_image.image_2.value = 'data:image/jpg;base64,' + message.data;
+});
+
 
 // *** axios *** //
 const store_pose = async () => {
@@ -179,15 +301,6 @@ const lidar_1_current = async () => {
 const lidar_2_current = async () => {
   await axios({
     url: 'http://localhost:5000/lidar_2_current',
-    data: {
-      // TODO : None
-    }
-  });
-};
-
-const lidar_3_current = async () => {
-  await axios({
-    url: 'http://localhost:5000/lidar_3_current',
     data: {
       // TODO : None
     }
