@@ -223,17 +223,22 @@ bool dock_ICP::getRTMatrixSVD_filter(const cv::Point2f* r, const cv::Point2f* m,
 	cv::waitKey(10);
 
 	std::vector<uchar> data;
-  sensor_msgs::CompressedImage compressed_image;
-  compressed_image.header.stamp = ros::Time::now();
-  compressed_image.format = "jpeg";
-  cv::imencode(".jpg", image, data);
-  compressed_image.data = data;
-  compressed_image_publisher_1.publish(compressed_image);
+	sensor_msgs::CompressedImage compressed_image;
+	compressed_image.header.stamp = ros::Time::now();
+	compressed_image.format = "jpeg";
+	cv::imencode(".jpg", image, data);
+	compressed_image.data = data;
+
+	for (int i=0; i<3; i++)
+	{
+		compressed_image_publisher_1.publish(compressed_image);
+	}
 	New_points.clear();
 
 	return find;
 
 }
+
 bool dock_ICP::getCovICP(const cv::Point2f* r, int nb_point_ref, const cv::Point2f* m, int nb_ref,  float *dxx, float *dxy, float *dyx, float *dyy)
 {
 	int k, i;
@@ -322,10 +327,12 @@ void dock_ICP::getRTMatrixSVD(const cv::Point2f* a, const cv::Point2f* b, int co
 		mean_b.x += b[i].x;
 		mean_b.y += b[i].y;
 	}
+
 	mean_a.x /= (float)count;
 	mean_a.y /= (float)count;
 	mean_b.x /= (float)count;
 	mean_b.y /= (float)count;
+
 	for (i = 0; i < count; i++) {
 		float AX = (a[i].x - mean_a.x);
 		float AY = (a[i].y - mean_a.y);
@@ -428,12 +435,16 @@ float dock_ICP::icp(const cv::Point2f* new_points, int nb_point_new, const cv::P
 		cv::waitKey(10);
 
 		std::vector<uchar> data;
-    sensor_msgs::CompressedImage compressed_image_2;
-    compressed_image_2.header.stamp = ros::Time::now();
-    compressed_image_2.format = "jpeg";
-    cv::imencode(".jpg", image, data);
-    compressed_image_2.data = data;
-    compressed_image_publisher_2.publish(compressed_image_2);
+		sensor_msgs::CompressedImage compressed_image_2;
+		compressed_image_2.header.stamp = ros::Time::now();
+		compressed_image_2.format = "jpeg";
+		cv::imencode(".jpg", image, data);
+		compressed_image_2.data = data;
+		
+		for (int i=0; i<3; i++)
+		{
+			compressed_image_publisher_2.publish(compressed_image_2);
+		}
 
 		getRTMatrixSVD(&input_correlation_new[0], &input_correlation_old[0], nb_point_new, &r, &t);
 		for (i = 0; i < nb_point_new; i++) {
@@ -509,36 +520,43 @@ float dock_ICP::icp(const cv::Point2f* new_points, int nb_point_new, const cv::P
 	free(input_correlation_old);
 	free(input_correlation_new);
 
-
-	printf("R info\n");
-	std::cout <<"test_r1.data.fl[0]:" << test_r1.data.fl[0]<<std::endl;
-	std::cout <<"test_r1.data.fl[1]:" << test_r1.data.fl[1]<<std::endl;
-	std::cout <<"test_r1.data.fl[2]:" << test_r1.data.fl[2]<<std::endl;
-	std::cout <<"test_r1.data.fl[3]:" << test_r1.data.fl[3]<<std::endl;
+	/* [TEST]
+	*/
+	std::cout << "R info" <<std::endl;
+	std::cout <<"test_r1.data.fl[0]: " << test_r1.data.fl[0] << std::endl;
+	std::cout <<"test_r1.data.fl[1]: " << test_r1.data.fl[1] << std::endl;
+	std::cout <<"test_r1.data.fl[2]: " << test_r1.data.fl[2] << std::endl;
+	std::cout <<"test_r1.data.fl[3]: " << test_r1.data.fl[3] << std::endl;
 
 	float angle = asin(test_r1.data.fl[2]);
 	float degree = angle * (180 / M_PI);
-	std::cout << "degree = " << degree << std::endl;
+	// [TEST] std::cout << "degree: " << degree << std::endl;
 
-	std::cout <<"T info" <<std::endl;
+	/* [TEST]
+	*/
+	std::cout << "T info" <<std::endl;
 	std::cout<<std::fixed;
 	std::cout.precision(5);
-	std::cout <<"test_t1.data.fl[0]:" << test_t1.data.fl[0]*0.001 <<std::endl;
-	std::cout <<"test_r1.data.fl[1]:" << test_t1.data.fl[1]*0.001<< "\n" <<std::endl;
+	std::cout <<"test_t1.data.fl[0]: " << test_t1.data.fl[0]*0.001 <<std::endl;
+	std::cout <<"test_r1.data.fl[1]: " << test_t1.data.fl[1]*0.001<< "\n" <<std::endl;
 	std::cout.unsetf(std::ios::fixed);
 
 	float T_x = test_t1.data.fl[0];
 	float T_y = test_t1.data.fl[1];
-	std::cout << "T:" << T_x <<" , " << T_y << std::endl;
+	std::cout << "T: " << T_x << ", " << T_y << std::endl;
 
 	static tf::TransformBroadcaster tf_broadcaster;
-  tf::Transform tf_transform;
-  tf::Quaternion tf_quaternion;
+  	tf::Transform tf_transform;
+  	tf::Quaternion tf_quaternion;
 
-  tf_transform.setOrigin(tf::Vector3(T_x, T_y, 0));
+  	tf_transform.setOrigin(tf::Vector3(T_x, T_y, 0));
 	tf_quaternion.setRPY(0, 0, angle);	// radian
-  tf_transform.setRotation(tf_quaternion);
-  tf_broadcaster.sendTransform(tf::StampedTransform(tf_transform, ros::Time::now(), "base_link", lidar_tf_topic));
+  	tf_transform.setRotation(tf_quaternion);
+
+	for (int i=0; i<3; i++)
+	{
+	  	tf_broadcaster.sendTransform(tf::StampedTransform(tf_transform, ros::Time::now(), "base_link", lidar_tf_topic));
+	}
 
 	return err;
 }
