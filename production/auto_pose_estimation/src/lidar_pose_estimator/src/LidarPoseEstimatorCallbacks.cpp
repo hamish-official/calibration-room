@@ -70,8 +70,7 @@ void LidarPoseEstimator::laser_scan_callback(const sensor_msgs::LaserScan::Const
 
 void LidarPoseEstimator::reference_callback(const std_msgs::Bool::ConstPtr &reference_bool)
 {
-  // [TEST]
-  ROS_INFO("start: [%d]", reference_bool->data);
+  // [TEST] ROS_INFO("start: [%d]", reference_bool->data);
 
   is_reference_mode = reference_bool->data;
   if (reference_bool->data == true) is_current_mode = false;
@@ -79,8 +78,7 @@ void LidarPoseEstimator::reference_callback(const std_msgs::Bool::ConstPtr &refe
 
 void LidarPoseEstimator::current_callback(const std_msgs::Bool::ConstPtr &current_bool)
 {
-  // [TEST]
-  ROS_INFO("check: [%d]", current_bool->data);
+  // [TEST] ROS_INFO("check: [%d]", current_bool->data);
 
   is_current_mode = current_bool->data;
   ref1.clear();
