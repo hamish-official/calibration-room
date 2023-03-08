@@ -541,8 +541,8 @@ float dock_ICP::icp(const cv::Point2f* new_points, int nb_point_new, const cv::P
 	std::cout <<"test_r1.data.fl[1]: " << test_t1.data.fl[1]*0.001<< "\n" <<std::endl;
 	std::cout.unsetf(std::ios::fixed);
 
-	float T_x = test_t1.data.fl[0];
-	float T_y = test_t1.data.fl[1];
+	float T_x = test_t1.data.fl[0]*0.001;
+	float T_y = test_t1.data.fl[1]*0.001;
 	std::cout << "T: " << T_x << ", " << T_y << std::endl;
 
 	static tf::TransformBroadcaster tf_broadcaster;
