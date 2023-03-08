@@ -40,7 +40,6 @@ private:
   cv::Ptr<cv::aruco::GridBoard> board = cv::aruco::GridBoard::create(5, 7, BOARD_LENGTH, GAP, dictionary);
 
   /* [PENGA CAMERA 1080p]
-  */
   cv::Mat intrinsic_parameter = (
     cv::Mat1d(3,3) << 950.3955649641379, 0, 617.4085543989751,
                       0, 949.664898671666, 384.055444194634,
@@ -53,21 +52,18 @@ private:
                       -0.0002136899031111,
                       -0.1050203120225495
   );
+  */
 
   /* [SVPro]
+  */
   cv::Mat intrinsic_parameter = (
-    cv::Mat1d(3, 3) << 0, 0, 0,
-                       0, 0, 0,
-                       0, 0, 1
+    cv::Mat1d(3,3) << 497.228,  0,        320.02,
+                      0,        497.422,  250.98,
+                      0,        0,        1
   );
   cv::Mat distortion_coefficient = (
-    cv::Mat1d(1, 5) << 0,
-                       0,
-                       0,
-                       0,
-                       0
+    cv::Mat1d(1,5) << -0.0434766, -0.00105831, 0.0, 0.0, 0.0
   );
-  */
 
 public:
   CameraPoseEstimator();
