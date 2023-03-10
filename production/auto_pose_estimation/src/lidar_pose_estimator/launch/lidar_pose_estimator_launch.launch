@@ -13,7 +13,7 @@
     <rosparam param="LIDAR_IAMGE_2">/lidar_front_image_message_2</rosparam>
     <rosparam param="LIDAR_REFERENCE">/lidar_front_reference</rosparam>
     <rosparam param="LIDAR_CURRENT">/lidar_front_current</rosparam>
-    <rosparam param="LIDAR_TF">/lidar_front_tf</rosparam>
+    <rosparam param="LIDAR_TF">lidar_front_tf</rosparam>
   </node>
 
   <node
@@ -27,6 +27,6 @@
       <rosparam param="LIDAR_IAMGE_2">/lidar_rear_image_message_2</rosparam>
       <rosparam param="LIDAR_REFERENCE">/lidar_rear_reference</rosparam>
       <rosparam param="LIDAR_CURRENT">/lidar_rear_current</rosparam>
-      <rosparam param="LIDAR_TF">/lidar_rear_tf</rosparam>
+      <rosparam param="LIDAR_TF">lidar_rear_tf</rosparam>
   </node>
 </launch>

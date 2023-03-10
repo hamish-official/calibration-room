@@ -340,8 +340,9 @@ const tf_listener = new ROSLIB.Topic({
 });
 
 tf_listener.subscribe((message) => {
-  if (message.transforms[0].child_frame_id === '/camera_01_tf') {
-    quaternion2euler(camera_1, message)
+  console.log(message.transforms[0])
+  if (message.transforms[0].child_frame_id === 'camera_01_tf') {
+    quaternion2euler(camera_1, message);
   }
   if (message.transforms[0].child_frame_id === 'depth_01_tf') {
     quaternion2euler(depth_1, message);
@@ -349,7 +350,7 @@ tf_listener.subscribe((message) => {
   if (message.transforms[0].child_frame_id === 'depth_02_tf') {
     quaternion2euler(depth_2, message);
   }
-  if (message.transforms[0].child_frame_id === '/lidar_01_tf') {
+  if (message.transforms[0].child_frame_id === 'lidar_01_tf') {
     lidar_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     lidar_1.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     // [INVALID] lidar_1.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
@@ -357,7 +358,7 @@ tf_listener.subscribe((message) => {
     // [INVALID] lidar_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
     lidar_1.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
   }
-  if (message.transforms[0].child_frame_id === '/lidar_02_tf') {
+  if (message.transforms[0].child_frame_id === 'lidar_02_tf') {
     lidar_2.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     lidar_2.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
     // [INVALID] lidar_2.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);

@@ -3,7 +3,7 @@ CAMERA_TOPIC: /cona/Sensor/RGB1
 CAMERA_IMAGE_01_TOPIC: /camera_01_image_01
 CAMERA_IMAGE_02_TOPIC: /camera_01_image_02
 
-CAMERA_TF_TOPIC: /camera_01_tf
+CAMERA_TF_TOPIC: camera_01_tf
 
 # Arucoboard 규격에 대한 파라미터
 ARUCO_EDGE_SIZE: 0.102

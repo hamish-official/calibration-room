@@ -10,7 +10,7 @@
     <rosparam param="LIDAR_IMAGE_2">/lidar_01_image_02</rosparam>
     <rosparam param="LIDAR_REFERENCE">/lidar_01_reference</rosparam>
     <rosparam param="LIDAR_CURRENT">/lidar_01_current</rosparam>
-    <rosparam param="LIDAR_TF">/lidar_01_tf</rosparam>
+    <rosparam param="LIDAR_TF">lidar_01_tf</rosparam>
   </node>
 
   <node
@@ -24,6 +24,6 @@
       <rosparam param="LIDAR_IMAGE_2">/lidar_02_image_02</rosparam>
       <rosparam param="LIDAR_REFERENCE">/lidar_02_reference</rosparam>
       <rosparam param="LIDAR_CURRENT">/lidar_02_current</rosparam>
-      <rosparam param="LIDAR_TF">/lidar_02_tf</rosparam>
+      <rosparam param="LIDAR_TF">lidar_02_tf</rosparam>
   </node>
 </launch>

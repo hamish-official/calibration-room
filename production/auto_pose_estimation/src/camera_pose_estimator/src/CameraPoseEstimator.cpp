@@ -8,45 +8,47 @@ CameraPoseEstimator::CameraPoseEstimator()
   compressed_image_publisher_1 = node_handle.advertise<sensor_msgs::CompressedImage>(camera_image_01, 1);
   compressed_image_publisher_2 = node_handle.advertise<sensor_msgs::CompressedImage>(camera_image_02, 1);
 
-  cv::namedWindow("default");
-  cv::namedWindow("image");
+  // [TEST] cv::namedWindow("default");
+  // [TEST] cv::namedWindow("image");
 
   dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
   board = cv::aruco::GridBoard::create(board_x, board_y, aruco_edge_size, aruco_gap_size, dictionary);
 
-  // for (auto &obj_point: board->objPoints)
-  // {
-  //   for (auto &obj_corner: obj_point)
-  //   {
-  //     /* [ALTERNATIVE]
-  //     float tmp_x = obj_corner.x;
-  //     float tmp_y = obj_corner.y;
-  //     // float tmp_z = obj_corner.z;
+  /* [CANDIDATE]
+  for (auto &obj_point: board->objPoints)
+  {
+    for (auto &obj_corner: obj_point)
+    {
+      // // [ALTERNATIVE]
+      // float tmp_x = obj_corner.x;
+      // float tmp_y = obj_corner.y;
+      // // float tmp_z = obj_corner.z;
 
-  //     obj_corner.x = 1.36;
-  //     obj_corner.y = tmp_x - 0.45;
-  //     obj_corner.z = tmp_y + 0.8;
-  //     */
+      // obj_corner.x = 1.36;
+      // obj_corner.y = tmp_x - 0.45;
+      // obj_corner.z = tmp_y + 0.8;
 
-  //     obj_corner.x = obj_corner.x - 0.45;
-  //     obj_corner.y = obj_corner.y + 0.8;
-  //     obj_corner.z = 1.36;
-  //   }
-  // }
 
-  // for (auto &obj_point: board->objPoints)
-  // {
-  //   for (auto &obj_corner: obj_point)
-  //   {
-  //     std::cout << obj_corner.x << " " << obj_corner.y << " " << obj_corner.z << std::endl;
-  //   }
-  // }
+      obj_corner.x = obj_corner.x - 0.45;
+      obj_corner.y = obj_corner.y + 0.8;
+      obj_corner.z = 1.36;
+    }
+  }
+
+  for (auto &obj_point: board->objPoints)
+  {
+    for (auto &obj_corner: obj_point)
+    {
+      std::cout << obj_corner.x << " " << obj_corner.y << " " << obj_corner.z << std::endl;
+    }
+  }
+  */
 }
 
 CameraPoseEstimator::~CameraPoseEstimator()
 {
-  cv::destroyWindow("default");
-  cv::destroyWindow("image");
+  // [TEST] cv::destroyWindow("default");
+  // [TEST] cv::destroyWindow("image");
 }
 
 void CameraPoseEstimator::camera_callback(const sensor_msgs::CompressedImage::ConstPtr& image_messages)
@@ -56,7 +58,7 @@ void CameraPoseEstimator::camera_callback(const sensor_msgs::CompressedImage::Co
   cv::Mat input_frame = cv::imdecode(cv::Mat(image_messages->data), 1);
   input_frame.copyTo(copied_image);
   cv::aruco::detectMarkers(copied_image, dictionary, corners, ids);
-  cv::imshow("default", copied_image);
+  // [TEST] cv::imshow("default", copied_image);
 
   std::vector<uchar> data;
   sensor_msgs::CompressedImage compressed_image;
@@ -96,20 +98,20 @@ void CameraPoseEstimator::estimate_pose()
     get_eular_angles(R, euler_angles);
 
     double pitch   = euler_angles[0] * (M_PI/180);
-    double yaw = euler_angles[1] * (M_PI/180);
+    double yaw = euler_angles[1] * (M_PI/180) - 3.141;
     double roll  = euler_angles[2] * (M_PI/180);
 
     // [TEST] std::cout << "roll = " << roll << ", pitch = " << pitch << ", yaw = " << yaw << std::endl;
 
     vector_to_marker.str(std::string());
-    vector_to_marker << std::setprecision(4)<< "x: " << std::setw(8) << x;
-    vector_to_marker << std::setprecision(4)<< "y: " << std::setw(8) << y;
-    vector_to_marker << std::setprecision(4)<< "z: " << std::setw(8) << z;
+    vector_to_marker << std::setprecision(4)<< "x: " << std::setw(8) << x << " ";
+    vector_to_marker << std::setprecision(4)<< "y: " << std::setw(8) << y << " ";
+    vector_to_marker << std::setprecision(4)<< "z: " << std::setw(8) << z << " ";
 
     cv::putText(copied_image, vector_to_marker.str(),
     cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(0, 252, 124), 2, CV_AVX);
 
-    cv::imshow("image", copied_image);
+    // [TEST] cv::imshow("found", copied_image);
 
     std::vector<uchar> data;
     sensor_msgs::CompressedImage compressed_image;
@@ -160,7 +162,7 @@ void CameraPoseEstimator::parameter_initializer()
   node_handle.getParam("/camera_pose_estimator/CAMERA_IMAGE_01_TOPIC", camera_image_01);
   node_handle.getParam("/camera_pose_estimator/CAMERA_IMAGE_02_TOPIC", camera_image_02);
   
-  node_handle.getParam("/camera_pose_estimator/CAMERA_TF", camera_tf);
+  node_handle.getParam("/camera_pose_estimator/CAMERA_TF_TOPIC", camera_tf);
   
   node_handle.getParam("/camera_pose_estimator/ARUCO_EDGE_SIZE", aruco_edge_size);
   node_handle.getParam("/camera_pose_estimator/ARUCO_GAP_SIZE", aruco_gap_size);
