@@ -88,9 +88,9 @@ void CameraPoseEstimator::estimate_pose()
     double*p = (double*)P.data;
     // [TEST] std::cout << "x = " << p[0] << ", y = " << p[1] << ", z = " << p[2] << std::endl;
 
-    double x = p[2];
-    double y = p[0];
-    double z = p[1];
+    double x = 1.36 - p[2];
+    double y = p[0] - 0.45;
+    double z = p[1] + 0.8;
 
     cv::Vec3d euler_angles;
     get_eular_angles(R, euler_angles);
