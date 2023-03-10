@@ -18,9 +18,6 @@
 #include <iostream>
 #include <vector>
 
-#define BOARD_LENGTH 0.033
-#define GAP 0.007
-
 class CameraPoseEstimator
 {
 private:
@@ -29,6 +26,9 @@ private:
   ros::Publisher compressed_image_publisher_1, compressed_image_publisher_2;
 
   std::string camera_topic, camera_tf;
+  std::string camera_image_01, camera_image_02;
+  float aruco_edge_size, aruco_gap_size;
+  int board_x, board_y, frames_per_seconds;
 
   cv::Mat image, copied_image;
 
@@ -36,8 +36,8 @@ private:
   std::vector<int> ids;
   std::vector<std::vector<cv::Point2f>> corners;
 
-  cv::Ptr<cv::aruco::Dictionary> dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
-  cv::Ptr<cv::aruco::GridBoard> board = cv::aruco::GridBoard::create(5, 7, BOARD_LENGTH, GAP, dictionary);
+  cv::Ptr<cv::aruco::Dictionary> dictionary;
+  cv::Ptr<cv::aruco::GridBoard> board;
 
   /* [PENGA CAMERA 1080p]
   cv::Mat intrinsic_parameter = (

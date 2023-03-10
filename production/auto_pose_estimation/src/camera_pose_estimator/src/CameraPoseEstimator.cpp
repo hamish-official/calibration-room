@@ -5,11 +5,42 @@ CameraPoseEstimator::CameraPoseEstimator()
   parameter_initializer();
 
   image_subscriber = node_handle.subscribe(camera_topic, 1, &CameraPoseEstimator::camera_callback, this);
-  compressed_image_publisher_1 = node_handle.advertise<sensor_msgs::CompressedImage>("camera_image_message_1", 1);
-  compressed_image_publisher_2 = node_handle.advertise<sensor_msgs::CompressedImage>("camera_image_message_2", 1);
+  compressed_image_publisher_1 = node_handle.advertise<sensor_msgs::CompressedImage>(camera_image_01, 1);
+  compressed_image_publisher_2 = node_handle.advertise<sensor_msgs::CompressedImage>(camera_image_02, 1);
 
   cv::namedWindow("default");
   cv::namedWindow("image");
+
+  dictionary = cv::aruco::getPredefinedDictionary(cv::aruco::DICT_6X6_250);
+  board = cv::aruco::GridBoard::create(board_x, board_y, aruco_edge_size, aruco_gap_size, dictionary);
+
+  // for (auto &obj_point: board->objPoints)
+  // {
+  //   for (auto &obj_corner: obj_point)
+  //   {
+  //     /* [ALTERNATIVE]
+  //     float tmp_x = obj_corner.x;
+  //     float tmp_y = obj_corner.y;
+  //     // float tmp_z = obj_corner.z;
+
+  //     obj_corner.x = 1.36;
+  //     obj_corner.y = tmp_x - 0.45;
+  //     obj_corner.z = tmp_y + 0.8;
+  //     */
+
+  //     obj_corner.x = obj_corner.x - 0.45;
+  //     obj_corner.y = obj_corner.y + 0.8;
+  //     obj_corner.z = 1.36;
+  //   }
+  // }
+
+  // for (auto &obj_point: board->objPoints)
+  // {
+  //   for (auto &obj_corner: obj_point)
+  //   {
+  //     std::cout << obj_corner.x << " " << obj_corner.y << " " << obj_corner.z << std::endl;
+  //   }
+  // }
 }
 
 CameraPoseEstimator::~CameraPoseEstimator()
@@ -36,7 +67,7 @@ void CameraPoseEstimator::camera_callback(const sensor_msgs::CompressedImage::Co
   compressed_image_publisher_1.publish(compressed_image);
 
   estimate_pose();
-  cv::waitKey(1);
+  cv::waitKey(frames_per_seconds);
 }
 
 void CameraPoseEstimator::estimate_pose()
@@ -49,31 +80,31 @@ void CameraPoseEstimator::estimate_pose()
     if(valid > 0)
       cv::drawFrameAxes(copied_image, intrinsic_parameter, distortion_coefficient, rvec, tvec, 3.5);
 
-
-    std::cout << "Translation = " << tvec[0] << std::endl;
-    std::cout << "Rotation = " << rvec[0] << std::endl;
-
     cv::Mat R;
     cv::Rodrigues(rvec,R);
     cv::Mat R_inv = R.inv();
 
     cv::Mat P = -R_inv * tvec;
     double*p = (double*)P.data;
-    std::cout << "x = " << p[0] << ", y = " << p[1] << ", z = " << p[2] << std::endl;
+    // [TEST] std::cout << "x = " << p[0] << ", y = " << p[1] << ", z = " << p[2] << std::endl;
+
+    double x = p[2];
+    double y = p[0];
+    double z = p[1];
 
     cv::Vec3d euler_angles;
     get_eular_angles(R, euler_angles);
 
-    double yaw   = euler_angles[0];
-    double pitch = euler_angles[1];
-    double roll  = euler_angles[2];
+    double pitch   = euler_angles[0] * (M_PI/180);
+    double yaw = euler_angles[1] * (M_PI/180);
+    double roll  = euler_angles[2] * (M_PI/180);
 
-    std::cout << "roll = " << roll << ", pitch = " << pitch << ", yaw = " << yaw << std::endl;
+    // [TEST] std::cout << "roll = " << roll << ", pitch = " << pitch << ", yaw = " << yaw << std::endl;
 
     vector_to_marker.str(std::string());
-    vector_to_marker << std::setprecision(4)<< "x: " << std::setw(8) << p[0];
-    vector_to_marker << std::setprecision(4)<< "y: " << std::setw(8) << p[1];
-    vector_to_marker << std::setprecision(4)<< "z: " << std::setw(8) << p[2];
+    vector_to_marker << std::setprecision(4)<< "x: " << std::setw(8) << x;
+    vector_to_marker << std::setprecision(4)<< "y: " << std::setw(8) << y;
+    vector_to_marker << std::setprecision(4)<< "z: " << std::setw(8) << z;
 
     cv::putText(copied_image, vector_to_marker.str(),
     cv::Point(10, 30), cv::FONT_HERSHEY_SIMPLEX, 0.6, cv::Scalar(0, 252, 124), 2, CV_AVX);
@@ -93,7 +124,7 @@ void CameraPoseEstimator::estimate_pose()
     tf::Transform tf_transform;
     tf::Quaternion tf_quaternion;
 
-    tf_transform.setOrigin(tf::Vector3(p[0], p[1], p[2]));
+    tf_transform.setOrigin(tf::Vector3(x, y, z));
     tf_quaternion.setRPY(roll, pitch, yaw);
     tf_transform.setRotation(tf_quaternion);
 
@@ -125,5 +156,16 @@ void CameraPoseEstimator::get_eular_angles(cv::Mat &rotation_camera_matrix, cv::
 void CameraPoseEstimator::parameter_initializer()
 {
   node_handle.getParam("/camera_pose_estimator/CAMERA_TOPIC", camera_topic);
+  
+  node_handle.getParam("/camera_pose_estimator/CAMERA_IMAGE_01_TOPIC", camera_image_01);
+  node_handle.getParam("/camera_pose_estimator/CAMERA_IMAGE_02_TOPIC", camera_image_02);
+  
   node_handle.getParam("/camera_pose_estimator/CAMERA_TF", camera_tf);
+  
+  node_handle.getParam("/camera_pose_estimator/ARUCO_EDGE_SIZE", aruco_edge_size);
+  node_handle.getParam("/camera_pose_estimator/ARUCO_GAP_SIZE", aruco_gap_size);
+  node_handle.getParam("/camera_pose_estimator/ARUCO_BOARD_X", board_x);
+  node_handle.getParam("/camera_pose_estimator/ARUCO_BOARD_Y", board_y);
+
+  node_handle.getParam("/camera_pose_estimator/FRAMES_PER_SECONDS", frames_per_seconds);
 }
