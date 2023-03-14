@@ -3,7 +3,9 @@
     <div class="row mb-3 d-flex justify-content-center">
       <button type="button" class="col-2 mx-1 btn btn-primary v-mar"  style="width: 12em; height: 4em;" @click="()=>mode=1"><strong>6-DOF DATA</strong></button>
       <button type="button" class="col-2 mx-1 btn btn-primary v-mar" style="width: 12em; height: 4em;" @click="()=>mode=2"><strong>SENSOR IMAGE</strong></button>
-      <button type="button" class="col-2 mx-1 btn btn-dark v-mar" style="width: 12em; height: 4em;" @click="all_lidar_reference"><strong>ALL LIDAR<br/>REFERENCE</strong></button>
+      <!-- [DEPRECATED]
+        <button type="button" class="col-2 mx-1 btn btn-dark v-mar" style="width: 12em; height: 4em;" @click="all_lidar_reference"><strong>ALL LIDAR<br/>REFERENCE</strong></button>
+      -->
       <button type="button" class="col-2 mx-1 btn btn-dark v-mar" style="width: 12em; height: 4em;" @click="lidar_1_current"><strong>LIDAR 1<br/>CURRENT</strong></button>
       <button type="button" class="col-2 mx-1 btn btn-dark v-mar" style="width: 12em; height: 4em;" @click="lidar_2_current"><strong>LIDAR 2<br/>CURRENT</strong></button>
     </div>
@@ -15,7 +17,7 @@
         </div>
       </div>
       <div class="row d-flex justify-content-center">
-        <div class="col-md-4">
+        <div class="col-md-4 background">
           <div class="bordered mb-2">
             <div class="row">
               <h3 class="no-top">Depth 1</h3>
@@ -24,7 +26,7 @@
               <DofComponent :sensor="depth_1" />
             </div>
           </div>
-          <div class="bordered mb-2">
+          <div class="bordered mb-2" style="background: rgba(0, 0, 0, 0.2)">
             <div class="row">
               <h3 class="no-top">Depth 2</h3>
             </div>
@@ -33,7 +35,7 @@
             </div>
           </div>
         </div>
-
+          
         <div class="col-md-4">
           <div class="bordered mb-2">
             <div class="row">
@@ -252,12 +254,6 @@ const store_pose = async () => {
       depth_1_roll : depth_1.roll.value,
       depth_1_pitch : depth_1.pitch.value,
       depth_1_yaw : depth_1.yaw.value,
-      depth_2_x : depth_2.x.value,
-      depth_2_y : depth_2.y.value,
-      depth_2_z : depth_2.z.value,
-      depth_2_roll : depth_2.roll.value,
-      depth_2_pitch : depth_2.pitch.value,
-      depth_2_yaw : depth_2.yaw.value,
       lidar_1_x : lidar_1.x.value,
       lidar_1_y : lidar_1.y.value,
       lidar_1_z : lidar_1.z.value,
@@ -280,6 +276,7 @@ const store_pose = async () => {
   });
 };
 
+/* [DEPRECATED]
 const all_lidar_reference = async () => {
   await axios({
     url: 'http://localhost:5000/all_lidar_reference',
@@ -288,6 +285,7 @@ const all_lidar_reference = async () => {
     }
   });
 };
+*/
 
 const lidar_1_current = async () => {
   await axios({
@@ -340,7 +338,6 @@ const tf_listener = new ROSLIB.Topic({
 });
 
 tf_listener.subscribe((message) => {
-  console.log(message.transforms[0])
   if (message.transforms[0].child_frame_id === 'camera_01_tf') {
     quaternion2euler(camera_1, message);
   }
@@ -399,5 +396,14 @@ h2, h5, p {
 }
 label {
   font-weight: normal;
+}
+
+.background {
+  position: relative;
+}
+
+.layer {
+  background-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
 }
 </style>

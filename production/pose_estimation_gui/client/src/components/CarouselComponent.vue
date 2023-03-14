@@ -25,23 +25,25 @@
               roll: {{  sensors[0].roll.value }} , pitch: {{  sensors[0].pitch.value }} , yaw: {{  sensors[0].yaw.value }}
             </div>
           </div>
-          <p>Depth 2</p>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="bordered" style="background-color: #444;">
-                <img :src="images.depth_2_image.image_1.value" style="width: 100%; height: 100%" />
+          <!-- [DEPRECATED]
+            <p>Depth 2</p>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="bordered" style="background-color: #444;">
+                  <img :src="images.depth_2_image.image_1.value" style="width: 100%; height: 100%" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bordered" style="background-color: #444;">
+                  <img :src="images.depth_2_image.image_2.value" style="width: 100%; height: 100%" />
+                </div>
+              </div>
+              <div class="row d-flex justify-content-center mt-3 mb-5" style="background-color: white;">
+                x: {{  sensors[1].x.value }} , y: {{  sensors[1].y.value }} , z: {{ sensors[1].z.value }} , 
+                roll: {{  sensors[1].roll.value }} , pitch: {{  sensors[1].pitch.value }} , yaw: {{  sensors[1].yaw.value }}
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="bordered" style="background-color: #444;">
-                <img :src="images.depth_2_image.image_2.value" style="width: 100%; height: 100%" />
-              </div>
-            </div>
-            <div class="row d-flex justify-content-center mt-3 mb-5" style="background-color: white;">
-              x: {{  sensors[1].x.value }} , y: {{  sensors[1].y.value }} , z: {{ sensors[1].z.value }} , 
-              roll: {{  sensors[1].roll.value }} , pitch: {{  sensors[1].pitch.value }} , yaw: {{  sensors[1].yaw.value }}
-            </div>
-          </div>
+          -->
           <!-- <div class="carousel-caption d-none d-md-block">
             <h5>Depth</h5>
           </div> -->
@@ -52,12 +54,12 @@
           <div class="row">
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="images.lidar_1_image.image_1.value" style="width: 100%; height: 100%" />
+                <img :src="images.lidar_1_image.image_1.value" style="width: 100%; height: 80%" />
               </div>
             </div>
             <div class="col-md-6">
               <div class="bordered" style="background-color: #444;">
-                <img :src="images.lidar_1_image.image_2.value" style="width: 100%; height: 100%" />
+                <img :src="images.lidar_1_image.image_2.value" style="width: 100%; height: 80%" />
               </div>
             </div>
             <div class="row d-flex justify-content-center mt-3 mb-5" style="background-color: white;">
