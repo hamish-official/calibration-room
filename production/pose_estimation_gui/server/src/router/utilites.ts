@@ -11,12 +11,6 @@ router.get('/send', async (request: Request, response: Response) => {
     console.log(err);
     console.log(stdout);
     console.error(stderr);
-
-    exec('cona', (err, stdout, stderr) => {
-      console.log(err);
-      console.log(stdout);
-      console.error(stderr);
-    });
   });
 });
 
