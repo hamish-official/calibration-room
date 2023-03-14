@@ -26,14 +26,22 @@
               <DofComponent :sensor="depth_1" />
             </div>
           </div>
-          <div class="bordered mb-2" style="background: rgba(0, 0, 0, 0.2)">
+          <div class="bordered mb-2">
+            <div class="row">
+              <h3 class="no-top">Camera 1</h3>
+            </div>
+            <div class="row">
+              <DofComponent :sensor="camera_1" />
+            </div>
+          </div>
+          <!-- <div class="bordered mb-2" style="background: rgba(0, 0, 0, 0.2)">
             <div class="row">
               <h3 class="no-top">Depth 2</h3>
             </div>
             <div class="row">
               <DofComponent :sensor="depth_2" />
             </div>
-          </div>
+          </div> -->
         </div>
           
         <div class="col-md-4">
@@ -56,17 +64,22 @@
         </div>
 
         <div class="col-md-4">
-          <div class="bordered mb-2">
+          <!-- <div class="bordered mb-2">
             <div class="row">
               <h3 class="no-top">Camera 1</h3>
             </div>
             <div class="row">
               <DofComponent :sensor="camera_1" />
             </div>
-          </div>
+          </div> -->
           <div class="bordered mb-2">
             <button class="btn btn-secondary" style="width: 100%; height: 14.1em;" @click="store_pose">
-              <span><h5>URDF 파일로 추출하기</h5></span>
+              <span><h5>캘리브레이션 결과 추출</h5></span>
+            </button>
+          </div>
+          <div class="bordered mb-2">
+            <button class="btn btn-secondary" style="width: 100%; height: 14.1em;" @click="send_pose">
+              <span><h5>추출된 파일 전송</h5></span>
             </button>
           </div>
         </div>
@@ -241,7 +254,6 @@ topics.lidar_2_image_2.subscribe((message) => {
   images.lidar_2_image.image_2.value = 'data:image/jpg;base64,' + message.data;
 });
 
-
 // *** axios *** //
 const store_pose = async () => {
   await axios({
@@ -272,6 +284,16 @@ const store_pose = async () => {
       camera_1_roll : camera_1.roll.value,
       camera_1_pitch : camera_1.pitch.value,
       camera_1_yaw : camera_1.yaw.value,
+    }
+  });
+};
+
+const send_pose = async () => {
+  await axios({
+    url: 'http://localhost:5000/send',
+    method: 'get',
+    data: {
+      // YET
     }
   });
 };
@@ -348,8 +370,8 @@ tf_listener.subscribe((message) => {
     quaternion2euler(depth_2, message);
   }
   if (message.transforms[0].child_frame_id === 'lidar_01_tf') {
-    lidar_1.x.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
-    lidar_1.y.value = message.transforms[0].transform.translation.y.toString().substring(0, 6);
+    lidar_1.x.value = (-1) * message.transforms[0].transform.translation.y.toString().substring(0, 6);
+    lidar_1.y.value = message.transforms[0].transform.translation.x.toString().substring(0, 6);
     // [INVALID] lidar_1.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
     // [INVALID] lidar_1.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
     // [INVALID] lidar_1.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
@@ -361,7 +383,7 @@ tf_listener.subscribe((message) => {
     // [INVALID] lidar_2.z.value = message.transforms[0].transform.translation.z.toString().substring(0, 6);
     // [INVALID] lidar_2.roll.value = message.transforms[0].transform.rotation.x.toString().substring(0, 6);
     // [INVALID] lidar_2.pitch.value = message.transforms[0].transform.rotation.y.toString().substring(0, 6);
-    lidar_2.yaw.value = message.transforms[0].transform.rotation.z.toString().substring(0, 6);
+    lidar_2.yaw.value = (message.transforms[0].transform.rotation.z + 3.14).toString().substring(0, 6);
   }
 });
 </script>

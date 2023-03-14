@@ -1,3 +1,5 @@
+<!-- Update: 2020-02-03 --> 
+<!-- urdf --> 
 <robot name="cona">
 
 	<link name="base_link"/>
@@ -6,18 +8,17 @@
 	<link name="laser3"/>
 	<link name="laser_multi"/>
 	<link name="camera_link"/>
-	<link name="rgb_link"/>
 
 	<joint name="robot2laser1" type="fixed">
 		<parent link="base_link"/>
 		<child link="laser1"/>
-		<origin xyz="0.134 -0.001 0" rpy="0 0 -0.003" />
+		<origin xyz="0.17 0 0" rpy="0 0 0" />
 	</joint>
 
 	<joint name="robot2laser2" type="fixed">
 		<parent link="base_link"/>
 		<child link="laser2"/>
-		<origin xyz="-0.147 -0.003 0" rpy="0 0 3.1336" />
+		<origin xyz="-0.17 0 0" rpy="0 0 3.14" />
 	</joint>
 
 	<joint name="robot2laser3" type="fixed">
@@ -25,7 +26,7 @@
 		<child link="laser3"/>
 		<origin xyz="0.0 0.0 0.0" rpy="0 0.0 0" />
 	</joint>
-
+	
 	<joint name="robot2laser_multi" type="fixed">
 		<parent link="base_link" />
 		<child link="laser_multi" />
@@ -35,13 +36,7 @@
 	<joint name="robot2depth" type="fixed">
 		<parent link="base_link"/>
 		<child link="camera_link"/>
-		<origin xyz="0.2645 0.0109 0.8977" rpy="-0.009 0.5762 0.0168" />
+		<origin xyz="0.35 0.105 0.9" rpy="0 0.58 0" />
 	</joint>
 
-	<joint name="robot2rgb" type="fixed">
-		<parent link="base_link"/>
-		<child link="rgb_link"/>
-		<origin xyz="0.2334 -0.004 1.0150" rpy="-3.135 -0.039 0.0016" />
-	</joint>
-
-</robot>
+</robot>        

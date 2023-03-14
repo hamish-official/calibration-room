@@ -2,8 +2,23 @@ import { Router } from 'express';
 import type { Request, Response } from 'express';
 import fs from 'fs';
 import { networkInterfaces } from 'os';
+import { exec } from 'child_process';
 
 const router = Router();
+
+router.get('/send', async (request: Request, response: Response) => {
+  exec('scp -rp cona.urdf cona@192.168.2.2:~/Desktop', (err, stdout, stderr) => {
+    console.log(err);
+    console.log(stdout);
+    console.error(stderr);
+
+    exec('cona', (err, stdout, stderr) => {
+      console.log(err);
+      console.log(stdout);
+      console.error(stderr);
+    });
+  });
+});
 
 router.post('/store', async (request: Request, response: Response) => {
   const {
