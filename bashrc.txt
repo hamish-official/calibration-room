@@ -95,8 +95,8 @@ alias l='ls -CF'
 alias main='ssh cona@192.168.2.2 -XC'
 alias sub='ssh cona@192.168.2.3 -XC'
 
-alias server='npm run dev --prefix ~/calibration-room/production/pose_estimation_gui/server'
-alias client='npm run dev --prefix ~/calibration-room/production/pose_estimation_gui/client'
+alias be='npm run dev --prefix ~/calibration-room/production/pose_estimation_gui/server'
+alias fe='npm run dev --prefix ~/calibration-room/production/pose_estimation_gui/client'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
