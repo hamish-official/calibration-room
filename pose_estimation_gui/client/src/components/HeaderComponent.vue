@@ -19,6 +19,9 @@
           <li class="nav-item">
             <router-link class="nav-link js-scroll-trigger" to="/settings">Settings</router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link js-scroll-trigger" to="/manipulations">Manipulations</router-link>
+          </li>
         </ul>
       </div>
     </div>

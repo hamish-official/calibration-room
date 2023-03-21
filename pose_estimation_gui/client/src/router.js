@@ -3,6 +3,7 @@ import Homepage from './pages/HomePage.vue';
 import CalibrationPage from './pages/CalibrationPage.vue';
 import HelpPage from './pages/HelpPage.vue';
 import SettingPage from './pages/SettingPage.vue';
+import ManipulationPage from './pages/ManipulationPage.vue';
 
 const routes = [
   {
@@ -20,6 +21,10 @@ const routes = [
   {
     path: '/settings',
     component: SettingPage
+  },
+  {
+    path: '/manipulations',
+    component: ManipulationPage
   }
 ];
 

@@ -75,8 +75,8 @@
         <div class="card-body p-3">
           <span class="mb-4"><b>3. 사용 방법</b></span><br/><br/>
           <ul>
-            <li class="mb-2">[터미널 1] $ fe</li>
-            <li class="mb-2">[터미널 2] $ be</li>
+            <li class="mb-2">[터미널 1] $ npm run dev --prefix ~/calibration-room/pose_estimation_gui/server</li>
+            <li class="mb-2">[터미널 2] $ npm run dev --prefix ~/calibration-room/pose_estimation_gui/client</li>
             <li class="mb-2">[브라우저] http://localhost:5173 접속</li>
           </ul>
         </div>
