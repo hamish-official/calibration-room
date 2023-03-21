@@ -3,7 +3,8 @@
     <div class="col-6">
       <div class="card shadow mb-4">
         <div class="card-body p-3">
-          <span class="mb-4"><b>1. 초기 세팅 방법</b></span><br/><br/>
+          <h4>1. 초기 세팅 방법</h4>
+          <hr/>
           <ul>
             <li><b>
               pose_estimation_gui 관련 초기 설정
@@ -47,7 +48,8 @@
     <div class="col-6">
       <div class="card shadow mb-4">
         <div class="card-body p-3">
-          <span class="mb-4"><b>2. 환경 변수 설정 방법</b></span><br/><br/>
+          <h4>2. 환경 변수 설정 방법</h4>
+          <hr/>
           <ul>
             <li><b>
               $ vim ~/.bashrc # 다음의 내용을 주석을 제거한 뒤 추가
@@ -73,7 +75,8 @@
       </div>
       <div class="card shadow mb-4">
         <div class="card-body p-3">
-          <span class="mb-4"><b>3. 사용 방법</b></span><br/><br/>
+          <h4>3. 사용 방법</h4>
+          <hr/>
           <ul>
             <li class="mb-2">[터미널 1] $ npm run dev --prefix ~/calibration-room/pose_estimation_gui/server</li>
             <li class="mb-2">[터미널 2] $ npm run dev --prefix ~/calibration-room/pose_estimation_gui/client</li>
