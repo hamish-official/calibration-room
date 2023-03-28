@@ -5,11 +5,7 @@
         <div class="margin-bottom-basic mb-4">
           <h5>로봇의 수동 조작 및 자율 주행 조작을 지원합니다.</h5>
           <span style="color:grey;">
-            작동 상태는 '
-            <span v-if="connection" style="color: green">{{ connection_text }}</span>
-            <span v-else style="color: red">{{ connection_text }}</span>
-            '이며, 연결된 아이피는
-            {{ (ip) ? ip + ' 입니다.' : '없습니다.' }}
+            수동 조작 버튼으로 캘리브레이션 공간을 빠져나온 뒤 자율 주행 버튼을 조작하시기 바랍니다.
           </span>
         </div>
       </div>
@@ -25,25 +21,25 @@
           <div class="row">
             <div class="col-4"></div>
             <button class="btn btn-secondary col-4" @click="upEvent">
-              <img :src="upSVG" style="width: 90%; height: 90%"/>
+              <img :src="upSVG" style="height: 6em;"/>
             </button>
             <div class="col-4"></div>
           </div>
           <div class="row">
             <button class="btn btn-secondary col-4" @click="leftEvent">
-              <img :src="leftSVG" style="width: 90%; height: 90%"/>
+              <img :src="leftSVG" style="height: 6em;"/>
             </button>
             <button class="btn btn-light col-4" @click="stopEvent">
-              <img :src="stopSVG" style="width: 90%; height: 90%"/>
+              <img :src="stopSVG" style="height: 6em;"/>
             </button>
             <button class="btn btn-secondary col-4" @click="rightEvent">
-              <img :src="rightSVG" style="width: 90%; height: 90%"/>
+              <img :src="rightSVG" style="height: 6em;"/>
             </button>
             </div>
           <div class="row">
               <div class="col-4"></div>
               <button class="btn btn-secondary col-4" @click="downEvent">
-                <img :src="downSVG" style="width: 90%; height: 90%"/>
+                <img :src="downSVG" style="height: 6em;"/>
               </button>
               <div class="col-4"></div>
           </div>
@@ -59,22 +55,22 @@
         </div>
         <div class="container">
           <div class="row mb-3">
-            <button class="btn btn-secondary col-12" style="height:5em;" @click="servingEvent('홈')">
+            <button class="btn btn-secondary col-12" style="height:5em;" @click="servingHome">
               <h1>홈</h1>
             </button>
           </div>
           <div class="row mb-3">
-            <button class="btn btn-secondary col-12" style="height:5em;" @click="servingEvent('1')">
+            <button class="btn btn-secondary col-12" style="height:5em;" @click="servingOne">
               <h1>1</h1>
             </button>
           </div>
           <div class="row mb-3">
-            <button class="btn btn-secondary col-12" style="height:5em;" @click="servingEvent('2')">
+            <button class="btn btn-secondary col-12" style="height:5em;" @click="servingTwo">
               <h1>2</h1>
             </button>
           </div>
           <div class="row mb-3">
-            <button class="btn btn-secondary col-12" style="height:5em;" @click="servingEvent('3')">
+            <button class="btn btn-secondary col-12" style="height:5em;" @click="servingThree">
               <h1>3</h1>
             </button>
           </div>
@@ -87,7 +83,7 @@
 
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+// import { ref } from 'vue';
 import ROSLIB from 'roslib';
 import upSVG from '../assets/up.svg';
 import downSVG from '../assets/down.svg';
@@ -95,10 +91,14 @@ import leftSVG from '../assets/left.svg';
 import rightSVG from '../assets/right.svg';
 import stopSVG from '../assets/stop.svg';
 
-// *** axios default settings *** //
-axios.defaults.baseURL = 'http://192.168.2.2:5000';
-axios.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
-axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
+// // *** axios default settings *** //
+// const AxiosInst = axios.create({
+//   baseURL : 'http://192.168.2.2:5000',
+//   headers: {
+//         "Access-Control-Allow-Origin": `http://localhost:3000`,
+//         'Access-Control-Allow-Credentials':"true",
+//     }
+// });
 
 // *** ros *** //
 const ros = new ROSLIB.Ros({
@@ -193,7 +193,7 @@ const leftEvent = async () => {
   });
 
   interval_id = setInterval(()=>(publish_twist()), 100);
-}
+};
 
 const rightEvent = async () => {
   twist = new ROSLIB.Message({
@@ -210,7 +210,7 @@ const rightEvent = async () => {
   });
 
   interval_id = setInterval(()=>(publish_twist()), 100);
-}
+};
 
 const stopEvent = async () => {
   clearInterval(interval_id);
@@ -230,42 +230,34 @@ const stopEvent = async () => {
   
   interval_id = setInterval(publish_twist(0), 100);
   clearInterval(interval_id);
-}
-
-const getMaps = async () => {
-  const data = await axios({
-    url: 'api/v1',
-    method: 'post',
-    data: {
-      cmd: 'getMaps'
-    }
-  })
 };
 
-async function servingEvent(goal_name) {
-  let data;
-
+const serving = async (goal_name) => {
+  let result = null;
   try {
-    data = await axios({
-      url: 'ap/v1',
-      cmd: 'setRobot',
-      value: {
-        state: 'going',
-        mode: 'serving',
-        goals: [{
-          table: goal_name,
-          tray: [0],
-        }],
-        nextGoal: {table: '', tray: []}
-      }
+    result = await axios.post("/api/v1", {
+      cmd: "setRobot",
+      value : {
+        state : "going",
+        mode : "serving",
+        goals :[
+          { table : goal_name, tray : [0] }
+        ],
+        nextGoal: { table: "", tray: [] }
+      },
     });
+    console.log(result);
   }
   catch (err) {
-    console.error(err);
+    console.error(err.message);
   }
-
-  console.log(data);
 }
+
+const servingOne = async () => { serving('1') };
+const servingTwo = async () => { serving('2') };
+const servingThree = async () => { serving('3') };
+const servingHome = async() => { serving('홈') };
+
 </script>
 
 <style scoped>
@@ -278,5 +270,6 @@ body {
 
 .card {
   min-height: 32em;
+  max-height: 32em;
 }
 </style>
