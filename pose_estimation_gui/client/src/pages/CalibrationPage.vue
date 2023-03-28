@@ -256,6 +256,7 @@ topics.lidar_2_image_2.subscribe((message) => {
 
 // *** axios *** //
 const store_pose = async () => {
+  // [TEST] console.log('store_pose');
   await axios({
     url: 'http://localhost:5000/store',
     method: 'post',
@@ -289,6 +290,7 @@ const store_pose = async () => {
 };
 
 const send_pose = async () => {
+  // [TEST] console.log('send_pose');
   await axios({
     url: 'http://localhost:5000/send',
     method: 'get',

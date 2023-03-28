@@ -7,6 +7,7 @@ import { exec } from 'child_process';
 const router = Router();
 
 router.get('/send', async (request: Request, response: Response) => {
+  // [TEST] console.log('send');
   exec('scp -rp cona.urdf cona@192.168.2.2:~/CoNA_Navi/install/share/cona/urdf/cona.urdf', (err, stdout, stderr) => {
     console.log(err);
     console.log(stdout);
@@ -15,6 +16,7 @@ router.get('/send', async (request: Request, response: Response) => {
 });
 
 router.post('/store', async (request: Request, response: Response) => {
+  // [TEST] console.log('store');
   const {
     depth_1_x, depth_1_y, depth_1_z, depth_1_roll, depth_1_pitch, depth_1_yaw,
     lidar_1_x, lidar_1_y, lidar_1_z, lidar_1_roll, lidar_1_pitch, lidar_1_yaw,
