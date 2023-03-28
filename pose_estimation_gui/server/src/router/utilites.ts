@@ -7,7 +7,7 @@ import { exec } from 'child_process';
 const router = Router();
 
 router.get('/send', async (request: Request, response: Response) => {
-  exec('scp -rp cona.urdf cona@192.168.2.2:~/Desktop', (err, stdout, stderr) => {
+  exec('scp -rp cona.urdf cona@192.168.2.2:~/CoNA_Navi/install/share/cona/urdf/cona.urdf', (err, stdout, stderr) => {
     console.log(err);
     console.log(stdout);
     console.error(stderr);
