@@ -26,19 +26,14 @@
               auto_pose_estimation 관련 초기 설정
             </b></li>
             <br/> $ sudo apt install libgflags-dev ros-noetic-image-geometry ros-noetic-camera-info-manager ros-noetic-image-transport
-            <br/> $ sudo apt install ros-noetic-image-publisher libgoogle-glog-dev libusb-1.0-0-dev libeigen3-dev
+            <br/> $ sudo apt install ros-noetic-image-publisher libgoogle-glog-dev libusb-1.0-0-dev libeigen3-dev libuvc-dev
             <br/> $ sudo apt install ros-noetic-tf2-ros ros-noetic-tf2-web-republisher ros-noetic-rosbridge-server
             <br/>
             <br/> $ cd ~/calibration-room/auto_pose_estimation
             <br/> $ catkin_make -j4
             <br/> 
-            <br/> # auto_pose_estimation/src/lidar_pose_estimator/data/lidar_01_reference.txt 내용을 복사
-            <br/> $ gedit lidar_01_reference.txt
-            <br/> # auto_pose_estimation/src/lidar_pose_estimator/data/lidar_02_reference.txt 내용을 복사
-            <br/> $ gedit lidar_02_reference.txt
-            <br/>
-            <br/> $ sudo mv lidar_01_reference.txt ~/.ros
-            <br/> $ sudo mv lidar_02_reference.txt ~/.ros
+            <br/> $ sudo cp lidar_01_reference.txt ~/.ros
+            <br/> $ sudo cp lidar_02_reference.txt ~/.ros
             <br/><br/>
           </ul>
         </div>
