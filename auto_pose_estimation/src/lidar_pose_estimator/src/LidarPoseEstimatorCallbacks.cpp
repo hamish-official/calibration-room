@@ -80,7 +80,6 @@ void LidarPoseEstimator::current_callback(const std_msgs::Bool::ConstPtr &curren
 {
   // [TEST] ROS_INFO("check: [%d]", current_bool->data);
 
-  is_current_mode = current_bool->data;
   ref1.clear();
 
   std::string temporary_filename = lidar_reference_topic;
@@ -106,6 +105,8 @@ void LidarPoseEstimator::current_callback(const std_msgs::Bool::ConstPtr &curren
     open_file.close();
   }
 
+  is_current_mode = current_bool->data;
+  
   /* [TEST]
   for (auto &element : ref1)
   {

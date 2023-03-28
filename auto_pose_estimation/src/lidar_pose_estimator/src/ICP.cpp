@@ -441,7 +441,7 @@ float dock_ICP::icp(const cv::Point2f* new_points, int nb_point_new, const cv::P
 		cv::imencode(".jpg", image, data);
 		compressed_image_2.data = data;
 		
-		for (int i=0; i<3; i++)
+		for (int i=0; i<5; i++)
 		{
 			compressed_image_publisher_2.publish(compressed_image_2);
 		}
@@ -553,7 +553,7 @@ float dock_ICP::icp(const cv::Point2f* new_points, int nb_point_new, const cv::P
 	tf_quaternion.setRPY(0, 0, angle);	// radian
   	tf_transform.setRotation(tf_quaternion);
 
-	for (int i=0; i<3; i++)
+	for (int i=0; i<15; i++)
 	{
 	  	tf_broadcaster.sendTransform(tf::StampedTransform(tf_transform, ros::Time::now(), "base_link", lidar_tf_topic));
 	}
